@@ -2,7 +2,6 @@ Marea {
   *new {
     |dict, gateKey|
 	"gateKey: %".format(gateKey).postln;
-    ^dict;
   }
 }
 
