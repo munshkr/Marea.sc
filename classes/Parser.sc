@@ -1,5 +1,5 @@
 Token {
-	var pos, type, value;
+	var pos, type, string;
 
 	*new { |pos, type=nil, string=nil|
 		^super.new.init(pos, type, string);
@@ -9,16 +9,13 @@ Token {
 		pos = pos_;
 		type = type_ ?? { \end };
 		type = type.asSymbol;
-		value = string_ ?? { type_ };
-
-		if (type == \number) {
-			value = string_.interpret;
-		}
+		string = string_ ?? { type_ };
+		string = string.asString;
 	}
 
 	pos { ^pos }
 	type { ^type }
-	value { ^value }
+	string { ^string }
 }
 
 Parser {
@@ -61,7 +58,7 @@ Parser {
 	parseTerm {
 		if (curToken.type == \number) {
 			var t = this.match(\number);
-			curList.add(t.value);
+			curList.add(t.string);
 		} {
 			if (curToken.type == '[') {
 				var newList = List.new, oldList;
