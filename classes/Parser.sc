@@ -1,23 +1,23 @@
 Token {
-	var pos, name, value;
+	var pos, type, value;
 
-	*new { |pos, name=nil, string=nil|
-		^super.new.init(pos, name, string);
+	*new { |pos, type=nil, string=nil|
+		^super.new.init(pos, type, string);
 	}
 
-	init { |pos_, name_, string_|
+	init { |pos_, type_, string_|
 		pos = pos_;
-		name = name_ ?? { \end };
-		name = name.asSymbol;
-		value = string_ ?? { name_ };
+		type = type_ ?? { \end };
+		type = type.asSymbol;
+		value = string_ ?? { type_ };
 
-		if (name == \number) {
+		if (type == \number) {
 			value = string_.interpret;
 		}
 	}
 
 	pos { ^pos }
-	name { ^name }
+	type { ^type }
 	value { ^value }
 }
 
@@ -53,17 +53,17 @@ Parser {
 	}
 
 	parseExpr {
-		while { [\number, '['].includes(curToken.name) } {
+		while { [\number, '['].includes(curToken.type) } {
 			this.parseTerm;
 		};
 	}
 
 	parseTerm {
-		if (curToken.name == \number) {
+		if (curToken.type == \number) {
 			var t = this.match(\number);
 			curList.add(t.value);
 		} {
-			if (curToken.name == '[') {
+			if (curToken.type == '[') {
 				var newList = List.new, oldList;
 				this.match('[');
 				curList.add(newList);
@@ -76,16 +76,15 @@ Parser {
 		}
 	}
 
-	match { |expectedTokenName|
+	match { |expectedTokenType|
 		var token;
-		if (curToken.isNil.not and: { curToken.name != expectedTokenName }) {
-            Error("Expected '%'".format(expectedTokenName)).throw;
+		if (curToken.isNil.not and: { curToken.type != expectedTokenType }) {
+            Error("Expected '%'".format(expectedTokenType)).throw;
 		};
         token = curToken;
 		if (curTokenPos < (tokens.size - 1)) {
             curTokenPos = curTokenPos + 1;
 			curToken = tokens[curTokenPos];
-			//"curTokenPos % curToken.value % tokens.size %".format(curTokenPos, curToken.value, tokens.size).postln;
 		};
 		^token
 	}
