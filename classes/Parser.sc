@@ -1,23 +1,3 @@
-Token {
-	var pos, type, string;
-
-	*new { |pos, type=nil, string=nil|
-		^super.new.init(pos, type, string);
-	}
-
-	init { |pos_, type_, string_|
-		pos = pos_;
-		type = type_ ?? { \end };
-		type = type.asSymbol;
-		string = string_ ?? { type_ };
-		string = string.asString;
-	}
-
-	pos { ^pos }
-	type { ^type }
-	string { ^string }
-}
-
 Parser {
 	var tokens, curTokenPos, curToken, curList, finished;
 
@@ -40,27 +20,27 @@ Parser {
 			var string = elem[1];
 
 			if ("[0-9]+".matchRegexp(string)) {
-				Token(pos, \number, string)
+				(pos: pos, type: \number, string: string)
 			} {
-				Token(pos, string)
+				(pos: pos, type: string.asSymbol, string: string)
 			};
 		};
-		tokenStrings.add(Token(string.size));
+		tokenStrings.add((pos: string.size, type: \end));
 		^tokenStrings;
 	}
 
 	parseExpr {
-		while { [\number, '['].includes(curToken.type) } {
+		while { [\number, '['].includes(curToken[\type]) } {
 			this.parseTerm;
 		};
 	}
 
 	parseTerm {
-		if (curToken.type == \number) {
+		if (curToken[\type] == \number) {
 			var t = this.match(\number);
-			curList.add(t.string);
+			curList.add(t[\string]);
 		} {
-			if (curToken.type == '[') {
+			if (curToken[\type] == '[') {
 				var newList = List.new, oldList;
 				this.match('[');
 				curList.add(newList);
@@ -75,7 +55,7 @@ Parser {
 
 	match { |expectedTokenType|
 		var token;
-		if (curToken.isNil.not and: { curToken.type != expectedTokenType }) {
+		if (curToken.isNil.not and: { curToken[\type] != expectedTokenType }) {
             Error("Expected '%'".format(expectedTokenType)).throw;
 		};
         token = curToken;
