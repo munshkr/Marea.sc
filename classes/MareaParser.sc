@@ -15,7 +15,7 @@ MareaParser {
 
 	tokenize { |string|
 		var tokenStrings = string.findRegexp("[0-9A-Za-z]+|[^ ]");
-		tokenStrings = tokenStrings.collect { |elem|
+		var tokens = List.newFrom(tokenStrings.collect { |elem|
 			var pos = elem[0];
 			var string = elem[1];
 
@@ -24,9 +24,9 @@ MareaParser {
 			} {
 				(pos: pos, type: string.asSymbol, string: string)
 			};
-		};
-		tokenStrings.add((pos: string.size, type: \end));
-		^tokenStrings;
+		});
+		tokens.add((pos: string.size, type: \end));
+		^tokens;
 	}
 
 	parseExpr {
@@ -59,7 +59,7 @@ MareaParser {
             Error("Expected '%'".format(expectedTokenType)).throw;
 		};
         token = curToken;
-		if (curTokenPos < (tokens.size - 1)) {
+		if (curTokenPos < tokens.size) {
             curTokenPos = curTokenPos + 1;
 			curToken = tokens[curTokenPos];
 		};
