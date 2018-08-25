@@ -34,18 +34,18 @@ MPPattern {
 	}
 
 	withQueryTime { |fn|
-		^MPPattern({ |start, end|	this.(fn.(start), fn.(end)) });
+		^MPPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}
 
 	withResultTime { |fn|
-		^MPPattern({ |start, end|
+		^MPPattern { |start, end|
 			this.(start, end).collect { |ev|
 				var posArc = ev.positionArc, activeArc = ev.activeArc;
 				posArc = MPArc(fn.(posArc.start), fn.(posArc.end));
 				activeArc = MPArc(fn.(activeArc.start), fn.(activeArc.end));
 				MPEvent(posArc, activeArc, ev.value)
 			}
-		});
+		};
 	}
 
 	fast { |value|
@@ -54,6 +54,14 @@ MPPattern {
 
 	slow { |value|
 		^this.fast(Rational(1, value));
+	}
+
+	rotLeft { |value|
+		^this.withResultTime { |t| t - value }.withQueryTime { |t| t + value };
+	}
+
+	rotRight { |value|
+		^this.rotLeft(0 - value);
 	}
 }
 
