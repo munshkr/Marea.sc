@@ -67,11 +67,15 @@ MPPattern {
 
 + Object {
 	pure {
-		^MPPattern({ |start, end|
+		^MPPattern { |start, end|
+			var startPos, endPos;
 			start.isNumber.not.if { Error("start must be a number").throw };
 			end.isNumber.not.if { Error("end must be a number").throw };
 
-			start.floor.asInt.to(end.asInt.ceil).collect { |t|
+			startPos = start.asFloat.floor.asInt;
+			endPos = end.asFloat.ceil.asInt;
+
+			startPos.to(endPos - 1).collect { |t|
 				var arc = MPArc(t, t+1);
 				MPEvent(arc, arc, this);
 			}
