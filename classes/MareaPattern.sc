@@ -2,7 +2,7 @@ MPArc {
 	var <start, <end;
 
 	*new { |start, end|
-		^super.newCopyArgs(start, end);
+		^super.newCopyArgs(start.asRational, end.asRational);
 	}
 
 	printOn { | stream |
