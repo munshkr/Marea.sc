@@ -33,6 +33,8 @@ MPPattern {
 		^func.(start, end);
 	}
 
+	mp { ^this }
+
 	withQueryTime { |fn|
 		^MPPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}
@@ -66,7 +68,7 @@ MPPattern {
 }
 
 + Object {
-	pure {
+	mp {
 		^MPPattern { |start, end|
 			var startPos, endPos;
 			start.isNumber.not.if { Error("start must be a number").throw };
@@ -89,7 +91,7 @@ MPPattern {
 			var l = this.size;
 			var r = start.floor;
 			var n = r % l;
-			var p = this[n];
+			var p = this[n].mp;
 			var offset = r - ((r - n).div(l));
 			p.withResultTime { |t| t + offset }.(start - offset, end - offset);
 		};
