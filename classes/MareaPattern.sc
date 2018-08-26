@@ -84,38 +84,14 @@ MPPattern {
 }
 
 + Array {
-	/*
 	cat {
 		^MPPattern { |start, end|
-			var events = List[];
-			var len = this.size;
-			this.do { |pat|
-				var r, n, offset, start_, end_;
-				pat.isKindOf(MPPattern).not.if {
-					Error("array must contain only MPPattern objects").throw;
-				};
-				r = start.floor;
-				n = r.mod(len);
-				offset = r - ((r - n).div(len));
-				start_ = start - offset;
-				end_ = end - offset;
-				events.addAll(pat.withResultTime({ |t| t + offset }).(start_, end_));
-			};
-			events.asArray;
-		};
-	}
-	*/
-
-	cat {
-		^MPPattern { |start, end|
-			var events = List[];
-			this.do { |pat, i|
-				events.addAll(pat.withResultTime({ |t| t + i }).(start, end));
-			};
-			// Keep events that start or end in the current arc
-			events.select { |ev|
-				(ev.positionArc.start >= start) || (ev.positionArc.end <= end);
-			}.asArray;
+			var l = this.size;
+			var r = start.floor;
+			var n = r % l;
+			var p = this[n];
+			var offset = r - ((r - n).div(l));
+			p.withResultTime { |t| t + offset }.(start - offset, end - offset);
 		};
 	}
 
