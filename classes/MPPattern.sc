@@ -103,4 +103,18 @@ MPPattern {
 	rotRight { |value|
 		^this.rotLeft(0 - value);
 	}
+
+	when { |testFn, fn|
+		^MPPattern { |start, end|
+			testFn.(start.floor).if {
+				fn.(this).(start, end)
+			} {
+				this.(start, end)
+			}
+		};
+	}
+
+	every { |num, fn|
+		^this.when({ |t| (t % num == 0) }, fn);
+	}
 }
