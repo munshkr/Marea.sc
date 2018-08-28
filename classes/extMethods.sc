@@ -32,3 +32,9 @@
 		^this.cat.fast(this.size);
 	}
 }
+
++ Rest {
+	mp {
+		^MPPattern { [] }
+	}
+}
