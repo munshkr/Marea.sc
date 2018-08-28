@@ -8,6 +8,10 @@ MPArc {
 	printOn { | stream |
 		stream << "(" << start << ", " << end << ")";
 	}
+
+	contains { |t|
+		^(t >= start) && (t < end)
+	}
 }
 
 MPEvent {
@@ -19,6 +23,30 @@ MPEvent {
 
 	printOn { | stream |
 		stream << "E(" << positionArc << ", " << activeArc << ", " << value.asString << ")";
+	}
+
+	onset {
+		^positionArc.start;
+	}
+
+	offset {
+		^positionArc.end;
+	}
+
+	start {
+		^activeArc.start;
+	}
+
+	hasOnset {
+		^(positionArc.start == activeArc.start);
+	}
+
+	hasOffset {
+		^(positionArc.end == activeArc.end);
+	}
+
+	onsetIn { |start, end|
+		^MPArc(start, end).contains(this.onset)
 	}
 }
 
@@ -47,6 +75,16 @@ MPPattern {
 				activeArc = MPArc(fn.(activeArc.start), fn.(activeArc.end));
 				MPEvent(posArc, activeArc, ev.value)
 			}
+		};
+	}
+
+	seqToRelOnsetDeltas { |s, e|
+		^this.(s, e).select { |event|
+			(event.onsetIn(s, e)) && (event.onset >= event.start)
+		}.collect { |event|
+			var s_ = event.positionArc.start;
+			var e_ = event.positionArc.end;
+			[(s_ - s) / (e - s), (e_ - s) / (e - s), event.value]
 		};
 	}
 
