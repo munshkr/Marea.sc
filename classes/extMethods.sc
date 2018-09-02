@@ -38,3 +38,13 @@
 		^MPPattern { [] }
 	}
 }
+
++ Dictionary {
+	mp {
+		var pat = Rest().mp;
+		this.keysValuesDo { |key, value|
+			pat = pat @ (key -> value).mp
+		}
+		^pat;
+	}
+}

@@ -119,4 +119,10 @@ MPPattern {
 	every { |num, fn|
 		^this.when({ |t| (t % num == 0) }, fn);
 	}
+
+	@ { |rpat|
+		^MPPattern { |start, end|
+			this.(start, end) ++ rpat.(start, end)
+		};
+	}
 }
