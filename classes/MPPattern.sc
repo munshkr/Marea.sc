@@ -75,11 +75,6 @@ MPPattern {
 			};
 			events.asArray;
 		}
-		/*
-		^MPPattern { |start, end|
-			this.(start, end) ++ rpat.(start, end)
-		};
-		*/
 	}
 
 	withQueryTime { |fn|
