@@ -6,7 +6,7 @@ MPArc {
 	}
 
 	printOn { | stream |
-		stream << "(" << start << ", " << end << ")";
+		stream << start.numerator << "/" << start.denominator << " " << end.numerator << "/" << end.denominator;
 	}
 
 	contains { |t|
