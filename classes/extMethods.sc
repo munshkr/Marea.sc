@@ -1,5 +1,5 @@
 + Object {
-	mp {
+	pure {
 		^MPPattern { |start, end|
 			var startPos, endPos;
 			start.isNumber.not.if { Error("start must be a number").throw };
@@ -13,6 +13,10 @@
 				MPEvent(arc, arc, this);
 			}
 		};
+	}
+
+	mp {
+		^this.pure;
 	}
 }
 
@@ -30,6 +34,10 @@
 
 	fastcat {
 		^this.cat.fast(this.size);
+	}
+
+	mp {
+		^this.fastcat;
 	}
 }
 
