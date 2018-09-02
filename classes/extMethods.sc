@@ -41,10 +41,21 @@
 
 + Dictionary {
 	mp {
-		var pat = Rest().mp;
+		var pat;
 		this.keysValuesDo { |key, value|
-			pat = pat @ (key -> value).mp
-		}
+			var newPat = value.mp.withEventValue(key -> _);
+			if (pat.isNil) {
+				pat = newPat;
+			} {
+				pat = pat @ newPat;
+			}
+		};
 		^pat;
+	}
+}
+
++ Rational {
+	floor {
+		^this.asInteger;
 	}
 }

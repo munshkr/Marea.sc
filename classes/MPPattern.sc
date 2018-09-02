@@ -63,6 +63,25 @@ MPPattern {
 
 	mp { ^this }
 
+	@ { |rpat|
+		rpat = rpat.mp;
+		^MPPattern { |start, end|
+			var events = List[];
+			this.(start, end).do { |ev|
+				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
+				events.add(ev);
+				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
+				events.addAll(revents);
+			};
+			events.asArray;
+		}
+		/*
+		^MPPattern { |start, end|
+			this.(start, end) ++ rpat.(start, end)
+		};
+		*/
+	}
+
 	withQueryTime { |fn|
 		^MPPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}
@@ -74,6 +93,14 @@ MPPattern {
 				posArc = MPArc(fn.(posArc.start), fn.(posArc.end));
 				activeArc = MPArc(fn.(activeArc.start), fn.(activeArc.end));
 				MPEvent(posArc, activeArc, ev.value)
+			}
+		};
+	}
+
+	withEventValue { |fn|
+		^MPPattern { |start, end|
+			this.(start, end).collect { |ev|
+				MPEvent(ev.positionArc, ev.activeArc, fn.(ev.value))
 			}
 		};
 	}
@@ -126,3 +153,5 @@ MPPattern {
 		};
 	}
 }
+
+MP : MPPattern {}
