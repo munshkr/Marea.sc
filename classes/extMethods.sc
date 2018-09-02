@@ -29,7 +29,7 @@
 			var p = this[n].mp;
 			var offset = r - ((r - n).div(l));
 			p.withResultTime { |t| t + offset }.(start - offset, end - offset);
-		};
+		}.splitQueries;
 	}
 
 	fastcat {

@@ -12,6 +12,17 @@ MPArc {
 	contains { |t|
 		^(t >= start) && (t < end)
 	}
+
+	cycles {
+		var s_ = start, e_ = end, res = List[];
+		while { (s_ < e_) && (s_.floor != e_.floor) } {
+			var nextCycle = s_.floor + 1;
+			res.add(MPArc(s_, nextCycle));
+			s_ = nextCycle;
+		};
+		if (s_ < e_ && s_.floor == e_.floor) { res.add(MPArc(s_, e_)) };
+		^res;
+	}
 }
 
 MPEvent {
@@ -98,6 +109,27 @@ MPPattern {
 				MPEvent(ev.positionArc, ev.activeArc, fn.(ev.value))
 			}
 		};
+	}
+
+	splitQueries {
+		^MPPattern { |start, end|
+			var cycles = MPArc(start, end).cycles;
+			var res = List[];
+			cycles.do { |cycle|
+				res.addAll(this.(cycle.start, cycle.end));
+			};
+			res.asArray;
+		};
+	}
+
+	splitAtSam {
+		^MPPattern { |start, end|
+			this.(start, end).collect { |ev|
+				var sam = start.floor;
+				var newArc = MPArc(ev.activeArc.start.max(sam), ev.activeArc.end.min(sam + 1));
+				MPEvent(ev.positionArc, newArc, ev.value);
+			};
+		}.splitQueries;
 	}
 
 	seqToRelOnsetDeltas { |s, e|
