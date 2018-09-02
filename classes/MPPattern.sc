@@ -88,13 +88,15 @@ MPPattern {
 		};
 	}
 
-	fast { |value|
+	density { |value|
 		^this.withQueryTime { |t| t * value }.withResultTime { |t| t / value };
 	}
+	fast { ^this.density }
 
-	slow { |value|
-		^this.fast(Rational(1, value));
+	sparsity { |value|
+		^this.density(Rational(1, value));
 	}
+	slow { ^this.sparsity }
 
 	rotLeft { |value|
 		^this.withResultTime { |t| t - value }.withQueryTime { |t| t + value };
