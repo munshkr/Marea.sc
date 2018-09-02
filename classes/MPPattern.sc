@@ -147,10 +147,16 @@ MPPattern {
 		^this.when({ |t| (t % num == 0) }, fn);
 	}
 
-	@ { |rpat|
+	// discretize TODO
+
+	*signal { |fn|
 		^MPPattern { |start, end|
-			this.(start, end) ++ rpat.(start, end)
-		};
+			if (start > end) { [] } { fn.(start).mp.(start, end) }
+		}
+	}
+
+	*sin {
+		^this.signal { |t| (sin(2*pi*t.asFloat) + 1) / 2 }
 	}
 }
 
