@@ -3,41 +3,34 @@
 This is some kind of TidalCycles implementation for SuperCollider.
 Because why not?
 
-Actually just trying to stretch my skills on SCLang...
+Actually just trying to have a better understanding of TidalCycles and improve
+my Sclang.
 
 ## To do
 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
+- [x] Basic functionality of Pattern and some functions
+- [ ] Streams (aka Pattern player)
+- [ ] Parser
+- [ ] Add missing pattern transformations
 
-## How it looks like?
+## How it ~~looks~~will look like?
 
-*this is subject to change...*
-
-```supercollider
-~drums = (s: "[bd sn, hh*4]").mp
-  @ (n: [0,1,2,3]).mp.every(3, _.fast(2))
-  @ (a: 42)
-```
+This **does not work and is subject to change**, but it might look like this...
 
 ```supercollider
 (
 ~d1 = MPStream.new;
 ~d1.set(
-  (s: "fm_t", n: "[0 2 3 5, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]").mp
+  (s: "fm_t", n: "[0 2 3 5, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]".t).mp
     .slow(2)
     .every(3, _.brak)
     .every(2, _.rotLeft(0.25))
     .every(2, _.within(0.5, 1, _.gap(2)))
     .every(3, _.jux(_.rev).stut(3, 0.5, 0.5))
-    .every(6, _ + (octave: "5 6 7"))
+    .every(6, _ + (octave: "5 6 7".t))
   @ (octave: 5)
-  @ (modP "0 2 4 6")
-  @ (index: "0 20")
+  @ (modP "0 2 4 6".t)
+  @ (index: "0 20".t)
   @ (lpf: MP.saw1.slow(2) * 3000 + 250)
   @ (lpq: MP.sine.slow(2).scale(0.05, 0.2))
 );
@@ -87,4 +80,9 @@ nil.mp.(0, 1)  //-> [ ]
 (k: 1, a: 2).mp.(0, 1)  //-> [ E(0/1 1/1, 0/1 1/1, (k -> 1)), E(0/1 1/1, 0/1 1/1, (a -> 2)) ]
 ```
 
-...
+---
+
+To-do:
+* Explain about Tidal pattern parser `#t` method
+* Streams and TempoClock
+* Pattern operators (`@`, `+`, `*`, etc.)
