@@ -86,3 +86,15 @@ To-do:
 * Explain about Tidal pattern parser `#t` method
 * Streams and TempoClock
 * Pattern operators (`@`, `+`, `*`, etc.)
+
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/munshkr/Marea.sc. This project is intended to be a safe,
+welcoming space for collaboration, and contributors are expected to adhere to
+the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## LICENSE
+
+See [LICENSE](LICENSE)
