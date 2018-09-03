@@ -1,7 +1,6 @@
 # Marea.sc
 
-This is some kind of TidalCycles implementation for SuperCollider.
-Because why not?
+Some kind of TidalCycles implementation for SuperCollider.  Because why not?
 
 Actually just trying to have a better understanding of TidalCycles and improve
 my Sclang.
