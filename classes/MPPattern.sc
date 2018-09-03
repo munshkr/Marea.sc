@@ -79,10 +79,13 @@ MPPattern {
 		^MPPattern { |start, end|
 			var events = List[];
 			this.(start, end).do { |ev|
+				var values = List[];
 				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
-				events.add(ev);
+
 				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
-				events.addAll(revents);
+				values.addAll(ev.value);
+				revents.do { |rev| values.addAll(rev.value) };
+				events.add(MPEvent(ev.positionArc, ev.activeArc, values));
 			};
 			events.asArray;
 		}
