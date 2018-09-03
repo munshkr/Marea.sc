@@ -176,6 +176,21 @@ MPPattern {
 
 	// discretize TODO
 
+	*cat { |array|
+		^MPPattern { |start, end|
+			var l = array.size;
+			var r = start.floor;
+			var n = r % l;
+			var p = array[n].mp;
+			var offset = r - ((r - n).div(l));
+			p.withResultTime { |t| t + offset }.(start - offset, end - offset);
+		}.splitQueries;
+	}
+
+	*fastcat { |array|
+		^array.cat.fast(array.size);
+	}
+
 	*signal { |fn|
 		^MPPattern { |start, end|
 			if (start > end) { [] } { fn.(start).mp.(start, end) }

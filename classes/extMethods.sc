@@ -20,37 +20,24 @@
 	}
 }
 
++ Interval {
+	cat { ^MPPattern.cat(this) }
+	fastcat { ^MPPattern.fastcat(this) }
+	mp { ^this.fastcat; }
+}
+
 + Array {
-	cat {
-		^MPPattern { |start, end|
-			var l = this.size;
-			var r = start.floor;
-			var n = r % l;
-			var p = this[n].mp;
-			var offset = r - ((r - n).div(l));
-			p.withResultTime { |t| t + offset }.(start - offset, end - offset);
-		}.splitQueries;
-	}
-
-	fastcat {
-		^this.cat.fast(this.size);
-	}
-
-	mp {
-		^this.fastcat;
-	}
+	cat { ^MPPattern.cat(this) }
+	fastcat { ^MPPattern.fastcat(this) }
+	mp { ^this.fastcat; }
 }
 
 + Nil {
-	mp {
-		^MPPattern { [] }
-	}
+	mp { ^MPPattern { [] } }
 }
 
 + Rest {
-	mp {
-		^MPPattern { [] }
-	}
+	mp { ^MPPattern { [] } }
 }
 
 + Dictionary {
