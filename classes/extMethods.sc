@@ -41,6 +41,12 @@
 	}
 }
 
++ Nil {
+	mp {
+		^MPPattern { [] }
+	}
+}
+
 + Rest {
 	mp {
 		^MPPattern { [] }
