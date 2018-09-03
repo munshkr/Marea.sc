@@ -28,7 +28,7 @@ This **does not work and is subject to change**, but it might look like this...
     .every(3, _.jux(_.rev).stut(3, 0.5, 0.5))
     .every(6, _ + (octave: "5 6 7".t))
   @ (octave: 5)
-  @ (modP "0 2 4 6".t)
+  @ (modP: "0 2 4 6".t)
   @ (index: "0 20".t)
   @ (lpf: MP.saw1.slow(2) * 3000 + 250)
   @ (lpq: MP.sine.slow(2).scale(0.05, 0.2));
