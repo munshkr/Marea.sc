@@ -19,7 +19,7 @@ This **does not work and is subject to change**, but it might look like this...
 ```supercollider
 (
 ~d1 = MPStream.new;
-~d1.set(
+~d1.src =
   (s: "fm_t", n: "[0 2 3 5, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]".t).mp
     .slow(2)
     .every(3, _.brak)
@@ -31,8 +31,7 @@ This **does not work and is subject to change**, but it might look like this...
   @ (modP "0 2 4 6".t)
   @ (index: "0 20".t)
   @ (lpf: MP.saw1.slow(2) * 3000 + 250)
-  @ (lpq: MP.sine.slow(2).scale(0.05, 0.2))
-);
+  @ (lpq: MP.sine.slow(2).scale(0.05, 0.2));
 )
 ```
 
