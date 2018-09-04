@@ -8,7 +8,7 @@ my Sclang.
 ## To do
 
 - [x] Basic functionality of Pattern and some functions
-- [ ] Streams (aka Pattern player)
+- [x] Streams (aka Pattern player)
 - [ ] Parser
 - [ ] Add missing pattern transformations
 
