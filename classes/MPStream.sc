@@ -1,26 +1,24 @@
 MPStream {
-	var <tempoclock;
+	var <>clock;
 	var <source;
+
 	var <isPlaying;
-	var isThreadRunning;
+	var <isThreadRunning;
+	var <>isTracing;
 
-	classvar ticksPerCycle = 8;
+	classvar tickDuration = 0.125;
 
-	*new { |tempoclock=nil|
-		if (tempoclock.isNil) { tempoclock = TempoClock.default };
-		^super.new.init(tempoclock);
+	*new { |clock|
+		^super.new.init(clock);
 	}
 
-	init { |tc|
-		tempoclock = tc;
-		source = nil.mp; // silence
+	init { |clk|
+		clock = clk ? TempoClock.default;
+		source = nil.mp;
 		isThreadRunning = false;
 		isPlaying = false;
+		isTracing = false;
 		CmdPeriod.add(this);
-	}
-
-	value { |newPattern|
-		this.source = newPattern;
 	}
 
 	source_ { |newPattern|
@@ -30,23 +28,25 @@ MPStream {
 	src_ { ^this.source_ }
 
 	play {
-		var tick = 1 % ticksPerCycle;
-
 		if (isThreadRunning) { ^this };
 		isThreadRunning = true;
-
 		isPlaying = true;
-		tempoclock.sched(tick, { |quant|
-			var ticks = (quant / 8).floor;
-			this.prPlayTick(ticks);
+		clock.play(this, tickDuration);
+	}
 
-			if (isPlaying) {
-				tick;
-			} {
-				isThreadRunning = false;
-				nil;
-			};
-		});
+	next { |beats|
+		var from = beats.asRational;
+		var to = (from + tickDuration).asRational;
+		// "beats: %; from: %; to: %".format(beats, from.asFloat, to.asFloat).postln;
+
+		this.prPlayEvents(from, to);
+
+		^if (isPlaying) {
+			tickDuration;
+		} {
+			isThreadRunning = false;
+			nil;
+		};
 	}
 
 	stop {
@@ -58,17 +58,13 @@ MPStream {
 		isThreadRunning = false;
 	}
 
-	prPlayTick { |ticks|
-		var patEvents, eventsPerOnset;
-		var a = ticks % ticksPerCycle;
-		var b = (ticks + 1) % ticksPerCycle;
+	prPlayEvents { |from, to|
+		var patEvents = this.source.seqToRelOnsetDeltas(from, to);
+		var eventsPerOnset = Dictionary.new;
 
-		"ticks: %".format(ticks).postln;
-		patEvents = this.source.seqToRelOnsetDeltas(a, b);
-
-		eventsPerOnset = Dictionary.new;
 		patEvents.do { |ev|
-			var start = ev[0], end = ev[1], values = ev[2];
+			var start = ev[0] * tickDuration, end = ev[1] * tickDuration, values = ev[2];
+
 			if (eventsPerOnset.at(start).isNil) {
 				eventsPerOnset.put(start, (dur: (end - start).asFloat));
 			};
@@ -76,9 +72,11 @@ MPStream {
 		};
 
 		if (eventsPerOnset.isEmpty.not) {
-			// eventsPerOnset.postln;
 			eventsPerOnset.keysValuesDo { |start, event|
-				tempoclock.sched(start.asFloat, { event.postln; event.play });
+				clock.sched(start.asFloat, {
+					if (isTracing) { event.postln };
+					event.play;
+				});
 			};
 		};
 	}
