@@ -1,4 +1,4 @@
-MareaParser {
+MPParser {
 	var tokens, curTokenPos, curToken, curList, finished;
 
 	parse { |string|

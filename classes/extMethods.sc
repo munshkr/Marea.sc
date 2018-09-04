@@ -60,3 +60,9 @@
 		^this.asInteger;
 	}
 }
+
++ String {
+	t {
+		^MPParser.new.parse(this);
+	}
+}
