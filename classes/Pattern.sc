@@ -155,6 +155,12 @@ MareaPattern {
 	}
 	slow { ^this.sparsity }
 
+	overlay { |pattern|
+		^MareaPattern { |start, end|
+			this.(start, end) ++ pattern.(start, end)
+		}
+	}
+
 	rotLeft { |value|
 		^this.withResultTime { |t| t - value }.withQueryTime { |t| t + value };
 	}
