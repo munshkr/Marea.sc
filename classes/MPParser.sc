@@ -1,4 +1,12 @@
-MPParser {
+MareaASTNode {
+	var <token, <type, <value;
+
+	*new { |token, type, value|
+		^super.new.newCopyArgs(token, type, value);
+	}
+}
+
+MareaParser {
 	var tokens, curTokenPos, curToken, curList, finished;
 
 	parse { |string|
