@@ -158,7 +158,7 @@ MareaPattern {
 
 	overlay { |pattern|
 		^MareaPattern { |start, end|
-			this.(start, end) ++ pattern.(start, end)
+			this.(start, end) ++ pattern.mp.(start, end)
 		}
 	}
 
