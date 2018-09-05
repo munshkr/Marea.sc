@@ -26,6 +26,7 @@ MareaStream {
 		this.play;
 	}
 	src_ { ^this.source_ }
+	src { ^this.source }
 
 	play {
 		if (isThreadRunning) { ^this };
