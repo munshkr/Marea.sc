@@ -201,6 +201,10 @@ MareaPattern {
 		^array.cat.fast(array.size);
 	}
 
+	*stack { |patterns|
+		^patterns.inject(nil.mp, { |a, b| a.overlay(b) });
+	}
+
 	*signal { |fn|
 		^MareaPattern { |start, end|
 			if (start > end) { [] } { fn.(start).mp.(start, end) }
