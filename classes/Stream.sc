@@ -61,28 +61,26 @@ MareaStream {
 
 	prPlayEvents { |from, to|
 		var patEvents = this.source.seqToRelOnsetDeltas(from, to);
-		var eventsPerOnset = Dictionary.new;
+		var eventsToPlay = List[];
 
 		patEvents.do { |ev|
-			var start = ev[0] * tickDuration, end = ev[1] * tickDuration, values = ev[2];
+			var onset = ev[0] * tickDuration, offset = ev[1] * tickDuration, values = ev[2];
 
 			if (values.isKindOf(List).not.or { values.any { |v| v.isKindOf(Association).not } }) {
 				"Events are not list of associations: %".format(ev).error;
 			} {
-				if (eventsPerOnset.at(start).isNil) {
-					eventsPerOnset.put(start, (dur: (end - start).asFloat));
-				};
-				eventsPerOnset[start].addAll(values);
+				var event = (dur: (offset - onset).asFloat);
+				event.addAll(values);
+				eventsToPlay.add([onset, event]);
 			}
 		};
 
-		if (eventsPerOnset.isEmpty.not) {
-			eventsPerOnset.keysValuesDo { |start, event|
-				clock.sched(start.asFloat, {
-					if (isTracing) { event.postln };
-					event.play;
-				});
-			};
+		eventsToPlay.do { |pair|
+			var onset = pair[0], event = pair[1];
+			clock.sched(onset.asFloat, {
+				if (isTracing) { event.postln };
+				event.play;
+			});
 		};
 	}
 }
