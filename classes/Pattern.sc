@@ -74,23 +74,6 @@ MareaPattern {
 
 	mp { ^this }
 
-	@ { |rpat|
-		rpat = rpat.mp;
-		^MareaPattern { |start, end|
-			var events = List[];
-			this.(start, end).do { |ev|
-				var values = List[];
-				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
-
-				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
-				values.addAll(ev.value);
-				revents.do { |rev| values.addAll(rev.value) };
-				events.add(MareaEvent(ev.positionArc, ev.activeArc, values));
-			};
-			events.asArray;
-		}
-	}
-
 	withQueryTime { |fn|
 		^MareaPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}
@@ -144,6 +127,24 @@ MareaPattern {
 			[(s_ - s) / (e - s), (e_ - s) / (e - s), event.value]
 		};
 	}
+
+	merge { |rpat|
+		rpat = rpat.mp;
+		^MareaPattern { |start, end|
+			var events = List[];
+			this.(start, end).do { |ev|
+				var values = List[];
+				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
+
+				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
+				values.addAll(ev.value);
+				revents.do { |rev| values.addAll(rev.value) };
+				events.add(MareaEvent(ev.positionArc, ev.activeArc, values));
+			};
+			events.asArray;
+		}
+	}
+	<> { |rpat| ^this.merge(rpat) }
 
 	density { |value|
 		^this.withQueryTime { |t| t * value }.withResultTime { |t| t / value };

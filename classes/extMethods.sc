@@ -48,10 +48,14 @@
 			if (pat.isNil) {
 				pat = newPat;
 			} {
-				pat = pat @ newPat;
+				pat = pat.merge(newPat);
 			}
 		};
 		^pat;
+	}
+
+	<> { |rpat|
+		^this.mp.merge(rpat)
 	}
 }
 
