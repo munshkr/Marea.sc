@@ -66,10 +66,14 @@ MareaStream {
 		patEvents.do { |ev|
 			var start = ev[0] * tickDuration, end = ev[1] * tickDuration, values = ev[2];
 
-			if (eventsPerOnset.at(start).isNil) {
-				eventsPerOnset.put(start, (dur: (end - start).asFloat));
-			};
-			eventsPerOnset[start].addAll(values);
+			if (values.isKindOf(List).not.or { values.any { |v| v.isKindOf(Association).not } }) {
+				"Events are not list of associations: %".format(ev).error;
+			} {
+				if (eventsPerOnset.at(start).isNil) {
+					eventsPerOnset.put(start, (dur: (end - start).asFloat));
+				};
+				eventsPerOnset[start].addAll(values);
+			}
 		};
 
 		if (eventsPerOnset.isEmpty.not) {
