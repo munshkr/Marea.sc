@@ -42,16 +42,12 @@
 
 + Dictionary {
 	mp {
-		var pat;
+		var pat = nil;
 		this.keysValuesDo { |key, value|
 			var newPat = value.mp.withEventValue { |v| List[(key -> v)] };
-			if (pat.isNil) {
-				pat = newPat;
-			} {
-				pat = pat.merge(newPat);
-			}
+			pat = if (pat.isNil) { newPat } { pat.merge(newPat) };
 		};
-		^pat;
+		^pat.mp;
 	}
 
 	<> { |rpat|
