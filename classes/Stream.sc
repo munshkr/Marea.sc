@@ -1,4 +1,4 @@
-MPStream {
+MareaStream {
 	var <>clock;
 	var <source;
 

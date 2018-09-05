@@ -1,6 +1,6 @@
 + Object {
 	pure {
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			var startPos, endPos;
 			start.isNumber.not.if { Error("start must be a number").throw };
 			end.isNumber.not.if { Error("end must be a number").throw };
@@ -9,8 +9,8 @@
 			endPos = end.asFloat.ceil.asInt;
 
 			startPos.to(endPos - 1).collect { |t|
-				var arc = MPArc(t, t+1);
-				MPEvent(arc, arc, this);
+				var arc = MareaArc(t, t+1);
+				MareaEvent(arc, arc, this);
 			}
 		};
 	}
@@ -21,23 +21,23 @@
 }
 
 + Interval {
-	cat { ^MPPattern.cat(this) }
-	fastcat { ^MPPattern.fastcat(this) }
+	cat { ^MareaPattern.cat(this) }
+	fastcat { ^MareaPattern.fastcat(this) }
 	mp { ^this.fastcat; }
 }
 
 + Array {
-	cat { ^MPPattern.cat(this) }
-	fastcat { ^MPPattern.fastcat(this) }
+	cat { ^MareaPattern.cat(this) }
+	fastcat { ^MareaPattern.fastcat(this) }
 	mp { ^this.fastcat; }
 }
 
 + Nil {
-	mp { ^MPPattern { [] } }
+	mp { ^MareaPattern { [] } }
 }
 
 + Rest {
-	mp { ^MPPattern { [] } }
+	mp { ^MareaPattern { [] } }
 }
 
 + Dictionary {
@@ -63,6 +63,6 @@
 
 + String {
 	t {
-		^MPParser.new.parse(this);
+		^MareaParser.new.parse(this);
 	}
 }

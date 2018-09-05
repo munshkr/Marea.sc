@@ -1,4 +1,4 @@
-MPArc {
+MareaArc {
 	var <start, <end;
 
 	*new { |start, end|
@@ -17,15 +17,15 @@ MPArc {
 		var s_ = start, e_ = end, res = List[];
 		while { (s_ < e_) && (s_.floor != e_.floor) } {
 			var nextCycle = s_.floor + 1;
-			res.add(MPArc(s_, nextCycle));
+			res.add(MareaArc(s_, nextCycle));
 			s_ = nextCycle;
 		};
-		if (s_ < e_ && s_.floor == e_.floor) { res.add(MPArc(s_, e_)) };
+		if (s_ < e_ && s_.floor == e_.floor) { res.add(MareaArc(s_, e_)) };
 		^res;
 	}
 }
 
-MPEvent {
+MareaEvent {
 	var <positionArc, <activeArc, <value;
 
 	*new { |positionArc, activeArc, value|
@@ -57,11 +57,11 @@ MPEvent {
 	}
 
 	onsetIn { |start, end|
-		^MPArc(start, end).contains(this.onset)
+		^MareaArc(start, end).contains(this.onset)
 	}
 }
 
-MPPattern {
+MareaPattern {
 	var func;
 
 	*new { |fn|
@@ -76,7 +76,7 @@ MPPattern {
 
 	@ { |rpat|
 		rpat = rpat.mp;
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			var events = List[];
 			this.(start, end).do { |ev|
 				var values = List[];
@@ -85,38 +85,38 @@ MPPattern {
 				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
 				values.addAll(ev.value);
 				revents.do { |rev| values.addAll(rev.value) };
-				events.add(MPEvent(ev.positionArc, ev.activeArc, values));
+				events.add(MareaEvent(ev.positionArc, ev.activeArc, values));
 			};
 			events.asArray;
 		}
 	}
 
 	withQueryTime { |fn|
-		^MPPattern { |start, end| this.(fn.(start), fn.(end)) };
+		^MareaPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}
 
 	withResultTime { |fn|
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
 				var posArc = ev.positionArc, activeArc = ev.activeArc;
-				posArc = MPArc(fn.(posArc.start), fn.(posArc.end));
-				activeArc = MPArc(fn.(activeArc.start), fn.(activeArc.end));
-				MPEvent(posArc, activeArc, ev.value)
+				posArc = MareaArc(fn.(posArc.start), fn.(posArc.end));
+				activeArc = MareaArc(fn.(activeArc.start), fn.(activeArc.end));
+				MareaEvent(posArc, activeArc, ev.value)
 			}
 		};
 	}
 
 	withEventValue { |fn|
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
-				MPEvent(ev.positionArc, ev.activeArc, fn.(ev.value))
+				MareaEvent(ev.positionArc, ev.activeArc, fn.(ev.value))
 			}
 		};
 	}
 
 	splitQueries {
-		^MPPattern { |start, end|
-			var cycles = MPArc(start, end).cycles;
+		^MareaPattern { |start, end|
+			var cycles = MareaArc(start, end).cycles;
 			var res = List[];
 			cycles.do { |cycle|
 				res.addAll(this.(cycle.start, cycle.end));
@@ -126,11 +126,11 @@ MPPattern {
 	}
 
 	splitAtSam {
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
 				var sam = start.floor;
-				var newArc = MPArc(ev.activeArc.start.max(sam), ev.activeArc.end.min(sam + 1));
-				MPEvent(ev.positionArc, newArc, ev.value);
+				var newArc = MareaArc(ev.activeArc.start.max(sam), ev.activeArc.end.min(sam + 1));
+				MareaEvent(ev.positionArc, newArc, ev.value);
 			};
 		}.splitQueries;
 	}
@@ -164,7 +164,7 @@ MPPattern {
 	}
 
 	when { |testFn, fn|
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			testFn.(start.floor).if {
 				fn.(this).(start, end)
 			} {
@@ -180,7 +180,7 @@ MPPattern {
 	// discretize TODO
 
 	*cat { |array|
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			var l = array.size;
 			var r = start.floor;
 			var n = r % l;
@@ -195,7 +195,7 @@ MPPattern {
 	}
 
 	*signal { |fn|
-		^MPPattern { |start, end|
+		^MareaPattern { |start, end|
 			if (start > end) { [] } { fn.(start).mp.(start, end) }
 		}
 	}
@@ -205,4 +205,4 @@ MPPattern {
 	}
 }
 
-MP : MPPattern {}
+MP : MareaPattern {}
