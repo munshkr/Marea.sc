@@ -23,6 +23,10 @@ MareaArc {
 		if (s_ < e_ && s_.floor == e_.floor) { res.add(MareaArc(s_, e_)) };
 		^res;
 	}
+
+	midPoint {
+		^(start + end) / 2
+	}
 }
 
 MareaEvent {
@@ -209,6 +213,25 @@ MareaPattern {
 		^MareaPattern { |start, end|
 			if (start > end) { [] } { fn.(start).mp.(start, end) }
 		}
+	}
+
+	*rand {
+		^MareaPattern { |start, end|
+			var arc = MareaArc(start, end);
+			var startPos = start.asFloat.floor.asInt;
+			var endPos = end.asFloat.ceil.asInt;
+
+			thisThread.randSeed = (arc.midPoint * 1000000).asInteger;
+
+			startPos.to(endPos - 1).collect { |t|
+				var arc = MareaArc(t, t + 1);
+				MareaEvent(arc, arc, 1.0.rand);
+			}
+		}
+	}
+
+	*irand { |to|
+		^this.rand.withEventValue { |v| (v * to).asInteger }
 	}
 
 	*sin {
