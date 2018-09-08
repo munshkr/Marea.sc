@@ -187,7 +187,7 @@ MareaPattern {
 			} {
 				this.(start, end)
 			}
-		};
+		}.splitQueries;
 	}
 
 	every { |num, fn|
