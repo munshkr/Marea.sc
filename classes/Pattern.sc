@@ -101,6 +101,12 @@ MareaPattern {
 		};
 	}
 
+	filterEventValue { |fn|
+		^MareaPattern { |start, end|
+			this.(start, end).select { |ev| fn.(ev.value) }
+		}
+	}
+
 	splitQueries {
 		^MareaPattern { |start, end|
 			var cycles = MareaArc(start, end).cycles;
@@ -186,6 +192,16 @@ MareaPattern {
 
 	every { |num, fn|
 		^this.when({ |t| (t % num == 0) }, fn);
+	}
+
+	degradeBy { |value|
+		^(this <> MareaPattern.rand)
+		.filterEventValue { |v| v[v.size - 1] > value }
+		.withEventValue { |v|
+			var res = v[0..v.size-2];
+			if (res.size == 1) { res = res[0] };
+			res
+		}
 	}
 
 	// discretize TODO
