@@ -204,6 +204,10 @@ MareaPattern {
 		}
 	}
 
+	degrade {
+		^this.degradeBy(0.5)
+	}
+
 	// discretize TODO
 
 	*cat { |array|
