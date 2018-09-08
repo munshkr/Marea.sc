@@ -194,6 +194,10 @@ MareaPattern {
 		^this.when({ |t| (t % num == 0) }, fn);
 	}
 
+	whenmod { |a, b, fn|
+		^this.when({ |t| (t % a) >= b }, fn)
+	}
+
 	degradeBy { |value|
 		^(this <> MareaPattern.rand)
 		.filterEventValue { |v| v[v.size - 1] > value }
