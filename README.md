@@ -9,7 +9,9 @@ my Sclang.
 
 - [x] Basic functionality of Pattern and some functions
 - [x] Streams (aka Pattern player)
+- [ ] `+`, `-`, `*`, `/` operators for patterns
 - [ ] Parser
+- [ ] Support for patterns on slow/fast/etc. using unwrap
 - [ ] Add missing pattern transformations
 
 ## How it ~~looks~~will look like?
