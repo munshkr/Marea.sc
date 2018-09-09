@@ -40,7 +40,7 @@ MareaStream {
 		var to = (from + tickDuration).asRational;
 		// "beats: %; from: %; to: %".format(beats, from.asFloat, to.asFloat).postln;
 
-		this.prPlayEvents(from, to);
+		this.source.asSCEvents(from, to).do(_.play);
 
 		^if (isPlaying) {
 			tickDuration;
@@ -57,30 +57,5 @@ MareaStream {
 	cmdPeriod {
 		isPlaying = false;
 		isThreadRunning = false;
-	}
-
-	prPlayEvents { |from, to|
-		var patEvents = this.source.seqToRelOnsetDeltas(from, to);
-		var eventsToPlay = List[];
-
-		patEvents.do { |ev|
-			var onset = ev[0] * tickDuration, offset = ev[1] * tickDuration, values = ev[2];
-
-			if (values.isKindOf(List).not.or { values.any { |v| v.isKindOf(Association).not } }) {
-				"Events are not list of associations: %".format(ev).error;
-			} {
-				var event = (dur: (offset - onset).asFloat);
-				event.addAll(values);
-				eventsToPlay.add([onset, event]);
-			}
-		};
-
-		eventsToPlay.do { |pair|
-			var onset = pair[0], event = pair[1];
-			clock.sched(onset.asFloat, {
-				if (isTracing) { event.postln };
-				event.play;
-			});
-		};
 	}
 }

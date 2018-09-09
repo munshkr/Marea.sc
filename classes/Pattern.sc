@@ -138,6 +138,26 @@ MareaPattern {
 		};
 	}
 
+	asSCEvents { |from=0, to=1|
+		var patEvents = this.seqToRelOnsetDeltas(from, to);
+		var dur = (to - from).asFloat;
+		var res = List[];
+
+		patEvents.do { |ev|
+			var onset = ev[0] * dur, offset = ev[1] * dur, values = ev[2];
+
+			if (values.isKindOf(List).not.or { values.any { |v| v.isKindOf(Association).not } }) {
+				"Events are not list of associations: %".format(ev).error;
+			} {
+				var event = (dur: (offset - onset).asFloat, timingOffset: onset.asFloat);
+				event.addAll(values);
+				res.add(event);
+			}
+		};
+
+		^res.asArray
+	}
+
 	merge { |rpat|
 		rpat = rpat.mp;
 		^MareaPattern { |start, end|
