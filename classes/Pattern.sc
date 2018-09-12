@@ -268,6 +268,19 @@ MareaPattern {
 		^this.degradeBy(0.5)
 	}
 
+	within { |start, end, fn|
+		^MP.stack([
+			fn.(this).playWhen { |t| var cp = t - t.floor; (cp >= start) && (cp < end) },
+			this.playWhen { |t| var cp = t - t.floor; ((cp >= start) && (cp < end)).not }
+		])
+	}
+
+	playWhen { |fn|
+		^MareaPattern { |start, end|
+			this.(start, end).select { |event| fn.(event.onset) }
+		}
+	}
+
 	// discretize TODO
 
 	*silence {
