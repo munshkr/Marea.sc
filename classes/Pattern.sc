@@ -225,10 +225,12 @@ MareaPattern {
 	rotLeft { |value|
 		^this.withResultTime { |t| t - value }.withQueryTime { |t| t + value };
 	}
+	rotL { |value| ^this.rotLeft(value) }
 
 	rotRight { |value|
 		^this.rotLeft(0 - value);
 	}
+	rotR { |v| ^this.rotR(v) }
 
 	when { |testFn, fn|
 		^MareaPattern { |start, end|
