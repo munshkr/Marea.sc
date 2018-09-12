@@ -260,6 +260,10 @@ MareaPattern {
 		}
 	}
 
+	brak {
+		^this.when({ |s| s % 2 == 1 }, { |p| [p, MareaPattern.silence].fastcat.rotRight(1 %/ 4) })
+	}
+
 	degrade {
 		^this.degradeBy(0.5)
 	}
