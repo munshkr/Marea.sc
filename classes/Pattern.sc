@@ -83,28 +83,15 @@ MareaPattern {
 	proxyControlClass { ^MareaStreamControl }
 	buildForProxy { |proxy, channelOffset|
 		var protoEvent = Event.default.buildForProxy(proxy, channelOffset);
-		^this.prMakePlayRoutine(proxy.clock, protoEvent)
+		^this.asPatternPlayer(proxy.clock, protoEvent)
 	}
 
-	play { |argClock, quant|
-		^this.prMakePlayRoutine(argClock).play(argClock, quant);
+	play { |clock, quant|
+		^this.asPatternPlayer(clock).play(clock, quant)
 	}
 
-	prMakePlayRoutine { |clock, protoEvent|
-		protoEvent = protoEvent ?? { Event.default };
-		^Routine {
-			loop {
-				var clk = clock ? TempoClock.default;
-				var beats = clk.beats;
-				var from = beats.asRational;
-				var to = (from + tickDuration).asRational;
-				// "beats: %; from: %; to: %".format(beats, from.asFloat, to.asFloat).postln;
-				this.source.asSCEvents(from, to).do { |event|
-					event.next(protoEvent).play;
-				};
-				tickDuration.yield;
-			}
-		}
+	asPatternPlayer { |clock, protoEvent|
+		^MareaPatternPlayer.new(this, clock, protoEvent)
 	}
 
 	withQueryTime { |fn|
