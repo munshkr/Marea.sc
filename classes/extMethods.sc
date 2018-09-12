@@ -40,7 +40,7 @@
 	mp { ^MareaPattern { [] } }
 }
 
-+ Dictionary {
++ Event {
 	mp {
 		var pat = nil;
 		this.keysValuesDo { |key, value|
@@ -50,9 +50,16 @@
 		^pat.mp;
 	}
 
-	<> { |rpat|
-		^this.mp.merge(rpat)
-	}
+	<< { |rpat| ^(this.mp << rpat) }
+	>> { |rpat| ^(this.mp >> rpat) }
+	<<* { |rpat| ^(this.mp <<* rpat) }
+	*>> { |rpat| ^(this.mp *>> rpat) }
+	<<+ { |rpat| ^(this.mp <<+ rpat) }
+	+>> { |rpat| ^(this.mp +>> rpat) }
+	<</ { |rpat| ^(this.mp <</ rpat) }
+	/>> { |rpat| ^(this.mp />> rpat) }
+	<<- { |rpat| ^(this.mp <<- rpat) }
+	->> { |rpat| ^(this.mp ->> rpat) }
 }
 
 + Rational {

@@ -191,7 +191,21 @@ MareaPattern {
 			events.asArray;
 		}
 	}
-	<> { |rpat| ^this.merge(rpat) }
+
+	<< { |rpat| ^this.merge(rpat) }
+	>> { |rpat| "ERROR: To do".postln }
+	<<* { |rpat| "ERROR: To do".postln }
+	* { |rpat| ^(this <<* rpat); }
+	*>> { |rpat| "ERROR: To do".postln }
+	+ { |rpat| ^(this <<+ rpat); }
+	<<+ { |rpat| "ERROR: To do".postln }
+	+>> { |rpat| "ERROR: To do".postln }
+	/ { |rpat| ^(this <</ rpat); }
+	<</ { |rpat| "ERROR: To do".postln }
+	/>> { |rpat| "ERROR: To do".postln }
+	- { |rpat| ^(this <<- rpat); }
+	<<- { |rpat| "ERROR: To do".postln }
+	->> { |rpat| "ERROR: To do".postln }
 
 	density { |value|
 		^this.withQueryTime { |t| t * value }.withResultTime { |t| t / value };
