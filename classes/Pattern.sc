@@ -78,6 +78,22 @@ MareaPattern {
 
 	mp { ^this }
 
+	proxyControlClass { ^MareaStreamControl }
+	buildForProxy { |proxy, channelOffset|
+		proxy.initBus(\audio);
+		^Routine {
+			loop {
+				var clock = proxy.clock ? TempoClock.default;
+				var beats = clock.beats;
+				var from = beats.asRational;
+				var to = (from + 0.125).asRational;
+				// "beats: %; from: %; to: %".format(beats, from.asFloat, to.asFloat).postln;
+				this.source.asSCEvents(from, to).do(_.play);
+				0.125.yield;
+			}
+		}
+	}
+
 	withQueryTime { |fn|
 		^MareaPattern { |start, end| this.(fn.(start), fn.(end)) };
 	}

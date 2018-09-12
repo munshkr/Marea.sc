@@ -1,3 +1,11 @@
+MareaStreamControl : StreamControl {
+	play {
+		if (stream.isPlaying.not) {
+			stream.play(clock)
+		}
+	}
+}
+
 MareaStream {
 	var <>clock;
 	var <source;
