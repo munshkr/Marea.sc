@@ -209,12 +209,12 @@ MareaPattern {
 	density { |value|
 		^this.withQueryTime { |t| t * value }.withResultTime { |t| t / value };
 	}
-	fast { ^this.density }
+	fast { |v| ^this.density(v) }
 
 	sparsity { |value|
 		^this.density(Rational(1, value));
 	}
-	slow { ^this.sparsity }
+	slow { |v| ^this.sparsity(v) }
 
 	overlay { |pattern|
 		^MareaPattern { |start, end|
