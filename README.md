@@ -8,7 +8,8 @@ my Sclang.
 ## To do
 
 - [x] Basic functionality of Pattern and some functions
-- [x] Streams (aka Pattern player)
+- [x] Event playing
+- [x] ProxySpace compatibility
 - [ ] `+`, `-`, `*`, `/` operators for patterns
 - [ ] Parser
 - [ ] Support for patterns on slow/fast/etc. using unwrap
@@ -18,23 +19,29 @@ my Sclang.
 
 This **does not work and is subject to change**, but it might look like this...
 
+Using ProxySpace:
+
 ```supercollider
 (
-~d1 = MareaStream.new;
-~d1.src =
-  (n: "[0 2 [~ 3?] 5*2, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]".t).mp
+p = ProxySpace.push(s);
+p.makeTempoClock;
+)
+
+(
+~x.play;
+~x = (n: "[0 2 [~ 3?] 5*2, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]".t).mp
     .slow(2)
     .every(3, _.brak)
     .every(2, _.rotLeft(0.25))
-    .every(2, _.within(0.5, 1, _.gap(2)))
-    .every(3, _.jux(_.rev).stut(3, 0.5, 0.5))
+    .every(2, { |p| p.within(0.5, 1, _.gap(2)) })
+    .every(3, { |p| p.jux.rev.stut(3, 0.5, 0.5) })
     .every(6, _ + (octave: "5 6 7".t))
-  <> (s: "fm"),
-  <> (octave: 5)
-  <> (modP: "0 2 4 6".t)
-  <> (index: "0 20".t)
-  <> (lpf: MP.saw1.slow(2) * 3000 + 250)
-  <> (lpq: MP.sine.slow(2).scale(0.05, 0.2))
+  << (s: "fm"),
+  << (octave: 5)
+  << (modP: "0 2 4 6".t)
+  << (index: "0 20".t)
+  << (lpf: MP.saw1.slow(2) * 3000 + 250)
+  << (lpq: MP.sine.slow(2).scale(0.05, 0.2));
 )
 ```
 
