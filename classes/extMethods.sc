@@ -33,11 +33,11 @@
 }
 
 + Nil {
-	mp { ^MareaPattern { [] } }
+	mp { ^MareaPattern.silence }
 }
 
 + Rest {
-	mp { ^MareaPattern { [] } }
+	mp { ^MareaPattern.silence }
 }
 
 + Event {

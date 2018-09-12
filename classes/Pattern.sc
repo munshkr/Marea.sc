@@ -266,6 +266,10 @@ MareaPattern {
 
 	// discretize TODO
 
+	*silence {
+		^MareaPattern { [] }
+	}
+
 	*cat { |array|
 		^MareaPattern { |start, end|
 			var l = array.size;
@@ -282,7 +286,7 @@ MareaPattern {
 	}
 
 	*stack { |patterns|
-		^patterns.inject(nil.mp, { |a, b| a.overlay(b) });
+		^patterns.inject(MareaPattern.silence, { |a, b| a.overlay(b) });
 	}
 
 	*signal { |fn|
