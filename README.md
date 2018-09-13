@@ -11,7 +11,7 @@ my Sclang.
 - [x] Event playing
 - [x] ProxySpace compatibility
 - [x] `+`, `-`, `*`, `/` operators for patterns
-- [ ] Refactor methods in classes that extend Pattern
+- [x] Refactor methods in classes that extend Pattern
 - [ ] Tidal Parser
 - [ ] Define palindrome, rev, cut, jux, juxBy
 - [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)

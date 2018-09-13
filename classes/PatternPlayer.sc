@@ -20,19 +20,9 @@ MareaPatternPlayer {
 		}
 	}
 
-	stop {
-		isPlaying = false;
-		routine.stop;
-		routine = this.prMakeRoutine
-	}
-
-	pause {
-		isPlaying = false
-	}
-
-	resume {
-		isPlaying = true
-	}
+	stop   { isPlaying = false }
+	pause  { isPlaying = false }
+	resume { isPlaying = true }
 
 	pattern {
 		^pattern ? MareaPattern.silence

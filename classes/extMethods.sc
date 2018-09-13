@@ -1,23 +1,6 @@
 + Object {
-	pure {
-		^MareaPattern { |start, end|
-			var startPos, endPos;
-			start.isNumber.not.if { Error("start must be a number").throw };
-			end.isNumber.not.if { Error("end must be a number").throw };
-
-			startPos = start.asFloat.floor.asInt;
-			endPos = end.asFloat.ceil.asInt;
-
-			startPos.to(endPos - 1).collect { |t|
-				var arc = MareaArc(t, t+1);
-				MareaEvent(arc, arc, this);
-			}
-		};
-	}
-
-	mp {
-		^this.pure;
-	}
+	pure { ^MareaPattern.pure(this) }
+	mp { ^this.pure }
 
 	<<* { |rpat| ^(this.mp <<* rpat) }
 	*>> { |rpat| ^(this.mp *>> rpat) }
@@ -27,18 +10,23 @@
 	/>> { |rpat| ^(this.mp />> rpat) }
 	<<- { |rpat| ^(this.mp <<- rpat) }
 	->> { |rpat| ^(this.mp ->> rpat) }
+	<<% { |rpat| ^(this.mp <<% rpat) }
+	%>> { |rpat| ^(this.mp %>> rpat) }
+	<<** { |rpat| ^(this.mp <<** rpat) }
+	**>> { |rpat| ^(this.mp **>> rpat) }
+
 }
 
 + Interval {
 	cat { ^MareaPattern.cat(this) }
 	fastcat { ^MareaPattern.fastcat(this) }
-	mp { ^this.fastcat; }
+	mp { ^this.fastcat }
 }
 
 + Array {
 	cat { ^MareaPattern.cat(this) }
 	fastcat { ^MareaPattern.fastcat(this) }
-	mp { ^this.fastcat; }
+	mp { ^this.fastcat }
 }
 
 + Nil {
@@ -54,9 +42,9 @@
 		var pat = nil;
 		this.keysValuesDo { |key, value|
 			var newPat = value.mp.withEventValue { |v| ().put(key, v) };
-			pat = if (pat.isNil) { newPat } { pat.merge(newPat) };
+			pat = if (pat.isNil) { newPat } { pat.merge(newPat) }
 		};
-		^pat.mp;
+		^pat.mp
 	}
 
 	<< { |rpat| ^(this.mp << rpat) }
@@ -65,12 +53,12 @@
 
 + Rational {
 	floor {
-		^this.asInteger;
+		^this.asInteger
 	}
 }
 
 + String {
 	t {
-		^MareaParser.new.parse(this);
+		^MareaParser.new.parse(this)
 	}
 }
