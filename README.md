@@ -11,9 +11,14 @@ my Sclang.
 - [x] Event playing
 - [x] ProxySpace compatibility
 - [x] `+`, `-`, `*`, `/` operators for patterns
-- [ ] Parser
+- [ ] Refactor methods in classes that extend Pattern
+- [ ] Tidal Parser
+- [ ] Define palindrome, rev, cut, jux, juxBy
+- [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)
 - [ ] Support for patterns on slow/fast/etc. using unwrap
-- [ ] Add missing pattern transformations
+- [ ] Define a way to add dynamically define instance/class Pattern methods
+- [ ] Start writing unit tests
+- [ ] Write documentation
 
 ## How it ~~looks~~will look like?
 
@@ -89,13 +94,7 @@ nil.mp.(0, 1)  //-> [ ]
 (k: 1, a: 2).mp.(0, 1)  //-> [ E(0/1 1/1, 0/1 1/1, (k -> 1)), E(0/1 1/1, 0/1 1/1, (a -> 2)) ]
 ```
 
----
-
-To-do:
-* Explain about Tidal pattern parser `#t` method
-* Streams and TempoClock
-* Pattern operators (`<>`, `+`, `*`, etc.)
-
+...
 
 ## Contributing
 
