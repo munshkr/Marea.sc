@@ -27,4 +27,12 @@ MareaArc {
 	midPoint {
 		^(start + end) / 2
 	}
+
+	== { |that|
+		^this.compareObject(that, #[\start, \end])
+	}
+
+	hash {
+		^this.instVarHash(#[\start, \end])
+	}
 }

@@ -32,4 +32,12 @@ MareaEvent {
 	onsetIn { |start, end|
 		^MareaArc(start, end).contains(this.onset)
 	}
+
+	== { |that|
+		^this.compareObject(that, #[\positionArc, \activeArc, \value])
+	}
+
+	hash {
+		^this.instVarHash(#[\positionArc, \activeArc, \value])
+	}
 }
