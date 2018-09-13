@@ -157,21 +157,20 @@ MareaPattern {
 	asSCEvents { |from=0, to=1|
 		var patEvents = this.seqToRelOnsetDeltas(from, to);
 		var dur = (to - from).asFloat;
-		var res = List[];
+		var events = List[];
 
 		patEvents.do { |ev|
-			var onset = ev[0] * dur, offset = ev[1] * dur, values = ev[2];
+			var onset = ev[0] * dur, offset = ev[1] * dur, value = ev[2];
 
-			if (values.isKindOf(List).not.or { values.any { |v| v.isKindOf(Association).not } }) {
-				"Events are not list of associations: %".format(ev).error;
+			if (value.isKindOf(Event).not) {
+				"MareaEvent values are not Events: %".format(ev).error;
 			} {
-				var event = (dur: (offset - onset).asFloat, timingOffset: onset.asFloat);
-				event.addAll(values);
-				res.add(event);
+				value.putPairs([\dur, (offset - onset).asFloat, \timingOffset, onset.asFloat]);
+				events.add(value);
 			}
 		};
 
-		^res.asArray
+		^events.asArray
 	}
 
 	merge { |rpat|
@@ -179,13 +178,18 @@ MareaPattern {
 		^MareaPattern { |start, end|
 			var events = List[];
 			this.(start, end).do { |ev|
-				var values = List[];
+				var value;
 				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
-
 				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
-				values.addAll(ev.value);
-				revents.do { |rev| values.addAll(rev.value) };
-				events.add(MareaEvent(ev.positionArc, ev.activeArc, values));
+				value = ev.value;
+				revents.do { |rev|
+					value = if (value.isKindOf(Event) && rev.value.isKindOf(Event)) {
+						value.merge(rev.value, { |l, r| r })
+					} {
+						rev.value
+					}
+				};
+				events.add(MareaEvent(ev.positionArc, ev.activeArc, value));
 			};
 			events.asArray;
 		}

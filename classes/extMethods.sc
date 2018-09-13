@@ -44,7 +44,7 @@
 	mp {
 		var pat = nil;
 		this.keysValuesDo { |key, value|
-			var newPat = value.mp.withEventValue { |v| List[(key -> v)] };
+			var newPat = value.mp.withEventValue { |v| ().put(key, v) };
 			pat = if (pat.isNil) { newPat } { pat.merge(newPat) };
 		};
 		^pat.mp;
