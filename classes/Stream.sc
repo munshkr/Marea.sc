@@ -1,20 +1,65 @@
-MareaPatternPlayer : Routine {
-	classvar tickDuration = 0.125;
+MareaPatternPlayer {
+	const <tickDuration = 0.125;
+
+	var >pattern, >clock, >protoEvent;
+	var routine;
+	var isPlaying = false;
 
 	*new { |pattern, clock, protoEvent|
-		protoEvent = protoEvent ?? { Event.default };
+		^super.newCopyArgs(pattern, clock, protoEvent).init
+	}
 
-		^super.new {
+	init {
+		routine = this.prMakeRoutine
+	}
+
+	play { |clock, quant|
+		if (isPlaying.not) {
+			isPlaying = true;
+			routine.play(clock, quant)
+		}
+	}
+
+	stop {
+		isPlaying = false;
+		routine.stop;
+		routine = this.prMakeRoutine
+	}
+
+	pause {
+		isPlaying = false
+	}
+
+	resume {
+		isPlaying = true
+	}
+
+	pattern {
+		^pattern ? MareaPattern.silence
+	}
+
+	clock {
+		^clock ?? { TempoClock.default }
+	}
+
+	protoEvent {
+		^protoEvent ?? { Event.default }
+	}
+
+	prMakeRoutine {
+		^Routine {
 			loop {
-				var clk = clock ? TempoClock.default;
-				var beats = clk.beats;
-				var from = beats.asRational;
-				var to = (from + tickDuration).asRational;
-				// "beats: %; from: %; to: %".format(beats, from.asFloat, to.asFloat).postln;
-				pattern.asSCEvents(from, to).do { |event|
-					event.next(protoEvent).play;
+				var beats, from, to;
+
+				if (isPlaying) {
+					beats = this.clock.beats;
+					from = beats.asRational;
+					to = (from + tickDuration).asRational;
+					this.pattern.asSCEvents(from, to).do { |event|
+						event.next(this.protoEvent).play
+					};
 				};
-				tickDuration.yield;
+				tickDuration.yield
 			}
 		}
 	}
