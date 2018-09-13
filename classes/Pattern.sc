@@ -173,7 +173,7 @@ MareaPattern {
 		^events.asArray
 	}
 
-	merge { |rpat|
+	merge { |rpat, mergeFn|
 		rpat = rpat.mp;
 		^MareaPattern { |start, end|
 			var events = List[];
@@ -184,9 +184,17 @@ MareaPattern {
 				value = ev.value;
 				revents.do { |rev|
 					value = if (value.isKindOf(Event) && rev.value.isKindOf(Event)) {
-						value.merge(rev.value, { |l, r| r })
+						value.merge(rev.value, mergeFn)
 					} {
-						rev.value
+						if (value.isKindOf(Event)) {
+							value.collect { |v| mergeFn.(v, rev.value) }
+						} {
+							if (rev.value.isKindOf(Event)) {
+								rev.value.collect { |v| mergeFn.(ev.value, v) }
+							} {
+								mergeFn.(value, rev.value)
+							}
+						}
 					}
 				};
 				events.add(MareaEvent(ev.positionArc, ev.activeArc, value));
@@ -195,20 +203,26 @@ MareaPattern {
 		}
 	}
 
-	<< { |rpat| ^this.merge(rpat) }
-	>> { |rpat| "ERROR: To do".postln }
-	<<* { |rpat| "ERROR: To do".postln }
-	* { |rpat| ^(this <<* rpat); }
-	*>> { |rpat| "ERROR: To do".postln }
-	+ { |rpat| ^(this <<+ rpat); }
-	<<+ { |rpat| "ERROR: To do".postln }
-	+>> { |rpat| "ERROR: To do".postln }
-	/ { |rpat| ^(this <</ rpat); }
-	<</ { |rpat| "ERROR: To do".postln }
-	/>> { |rpat| "ERROR: To do".postln }
+	<< { |rpat| ^this.merge(rpat, { |a, b| b }) }
+	// >> { |rpat| ^this.mergeRight(rpat, { |a, b| a }) }
+	<<* { |rpat| ^this.merge(rpat, { |a, b| a * b }) }
+	* { |rpat| ^(this <<* rpat) }
+	// *>> { |rpat| ^this.mergeRight(rpat, { |a, b| a * b }) }
+	+ { |rpat| ^(this <<+ rpat) }
+	<<+ { |rpat| ^this.merge(rpat, { |a, b| a + b }) }
+	// +>> { |rpat| ^this.mergeRight(rpat, { |a, b| a + b }) }
+	/ { |rpat| ^(this <</ rpat) }
+	<</ { |rpat| ^this.merge(rpat, { |a, b| a / b }) }
+	// />> { |rpat| ^this.mergeRight(rpat, { |a, b| a / b }) }
 	- { |rpat| ^(this <<- rpat); }
-	<<- { |rpat| "ERROR: To do".postln }
-	->> { |rpat| "ERROR: To do".postln }
+	<<- { |rpat| ^this.merge(rpat, { |a, b| a - b }) }
+	// ->> { |rpat| ^this.mergeRight(rpat, { |a, b| a - b }) }
+	% { |rpat| ^(this <<% rpat); }
+	<<% { |rpat| ^this.merge(rpat, { |a, b| a % b }) }
+	// %>> { |rpat| ^this.mergeRight(rpat, { |a, b| a % b }) }
+	** { |rpat| ^(this <<** rpat); }
+	<<** { |rpat| ^this.merge(rpat, { |a, b| a ** b }) }
+	// **>> { |rpat| ^this.mergeRight(rpat, { |a, b| a ** b }) }
 
 	density { |value|
 		^this.withQueryTime { |t| t * value }.withResultTime { |t| t / value };

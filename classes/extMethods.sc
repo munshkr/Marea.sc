@@ -18,6 +18,15 @@
 	mp {
 		^this.pure;
 	}
+
+	<<* { |rpat| ^(this.mp <<* rpat) }
+	*>> { |rpat| ^(this.mp *>> rpat) }
+	<<+ { |rpat| ^(this.mp <<+ rpat) }
+	+>> { |rpat| ^(this.mp +>> rpat) }
+	<</ { |rpat| ^(this.mp <</ rpat) }
+	/>> { |rpat| ^(this.mp />> rpat) }
+	<<- { |rpat| ^(this.mp <<- rpat) }
+	->> { |rpat| ^(this.mp ->> rpat) }
 }
 
 + Interval {
@@ -52,14 +61,6 @@
 
 	<< { |rpat| ^(this.mp << rpat) }
 	>> { |rpat| ^(this.mp >> rpat) }
-	<<* { |rpat| ^(this.mp <<* rpat) }
-	*>> { |rpat| ^(this.mp *>> rpat) }
-	<<+ { |rpat| ^(this.mp <<+ rpat) }
-	+>> { |rpat| ^(this.mp +>> rpat) }
-	<</ { |rpat| ^(this.mp <</ rpat) }
-	/>> { |rpat| ^(this.mp />> rpat) }
-	<<- { |rpat| ^(this.mp <<- rpat) }
-	->> { |rpat| ^(this.mp ->> rpat) }
 }
 
 + Rational {

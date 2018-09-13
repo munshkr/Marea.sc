@@ -10,7 +10,7 @@ my Sclang.
 - [x] Basic functionality of Pattern and some functions
 - [x] Event playing
 - [x] ProxySpace compatibility
-- [ ] `+`, `-`, `*`, `/` operators for patterns
+- [x] `+`, `-`, `*`, `/` operators for patterns
 - [ ] Parser
 - [ ] Support for patterns on slow/fast/etc. using unwrap
 - [ ] Add missing pattern transformations
