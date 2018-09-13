@@ -285,7 +285,11 @@ MareaPattern {
 		}
 	}
 
-	// discretize TODO
+	discretize { |num|
+		// The left pattern "0.mp" is used to build the "structure".
+		// The 0 value is an arbitrary value, and will be overwritten by the merge operator <<.
+		^0.mp.density(num) << this
+	}
 
 	*silence {
 		^MareaPattern { [] }
