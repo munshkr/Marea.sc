@@ -1,37 +1,44 @@
 MareaASTNode {
-	var <token, <type, <value;
+	var <type, <token, <value;
 
-	*new { |token, type, value|
-		^super.new.newCopyArgs(token, type, value);
+	*new { |type, token, value|
+		^super.new.newCopyArgs(type, token, value);
 	}
 }
 
 MareaParser {
 	var tokens, curTokenPos, curToken, curList, finished;
 
+	const <tokenRegex = "[\\[\\]\\(\\){},%/\\*!\\?]|[A-Za-z0-9\._\\-]+";
+	const <regexes = #[
+		\float, "^-?[0-9]+\\.[0-9]*$",
+		\integer, "^-?[0-9]+$",
+		\string, "^[A-Za-z][A-Za-z0-9\\-_]*$"
+	];
+
 	parse { |string|
-		var result = List.new;
+		var result;
+
 		finished = false;
-		curList = result;
+
 		tokens = this.tokenize(string);
 		curTokenPos = 0;
 		curToken = tokens[curTokenPos];
+
 		this.parseExpr;
 		this.match(\end);
+
 		^result;
 	}
 
 	tokenize { |string|
-		var tokenStrings = string.findRegexp("[0-9A-Za-z]+|[^ ]");
+		var tokenStrings = string.findRegexp(tokenRegex);
 		var tokens = List.newFrom(tokenStrings.collect { |elem|
 			var pos = elem[0];
 			var string = elem[1];
-
-			if ("[0-9]+".matchRegexp(string)) {
-				(pos: pos, type: \number, string: string)
-			} {
-				(pos: pos, type: string.asSymbol, string: string)
-			};
+			var re = regexes.asAssociations.detect { |r| r.matchRegexp(string) };
+			var type = if (re.isNil) { string.asSymbol } { re.key };
+			(pos: pos, type: type, string: string)
 		});
 		tokens.add((pos: string.size, type: \end));
 		^tokens;
