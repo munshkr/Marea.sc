@@ -5,16 +5,16 @@ form (EBNF), and with regular expressions.  Although it is heavily inspired in
 the TidalCycles language, it is not a 100% replica.
 
 ```
-root = group, {modifier} ;
+root = expr ;
+
+expr = group, {modifier} ;
 
 group = polyGroup ;
 polyGroup = "<", polyMGroup, ">" | polyMGroup ;
 polyMGroup = "{", seqGroup, "}", ["%", number] | seqGroup ;
 seqGroup = "[", seq, "]" ;
-
-seq = termMod, {termMod}, {",", seq} ;
-termMod = term, {modifier} ;
-term = value | group ;
+seq = term, {term}, {",", seq} ;
+term = (value, {modifier}) | expr ;
 
 modifier = bjorklundMod ;
 bjorklundMod = ("(", expr, ",", expr, ")") | densityMod ;

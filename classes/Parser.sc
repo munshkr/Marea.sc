@@ -9,7 +9,7 @@ MareaASTNode {
 MareaParser {
 	var tokens, curTokenPos, curToken, curList, finished;
 
-	const <tokenRegex = "[\\[\\]\\(\\){},%/\\*!\\?]|[A-Za-z0-9\._\\-]+";
+	const <tokenRegex = "[\\[\\]\\(\\){},%/\\*!\\?~]|[A-Za-z0-9\._\\-]+";
 	const <regexes = #[
 		\float, "^-?[0-9]+\\.[0-9]*$",
 		\integer, "^-?[0-9]+$",
@@ -29,7 +29,7 @@ MareaParser {
 		curTokenPos = 0;
 		curToken = tokens[curTokenPos];
 
-		this.parseRoot;
+		this.parseExpr;
 		this.match(\end);
 
 		^result;
@@ -48,15 +48,11 @@ MareaParser {
 		^tokens;
 	}
 
-	parseRoot {
-		this.parseGroup;
+	parseExpr {
+		this.parsePolyGroup;
 		while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
 			this.parseModifier
 		}
-	}
-
-	parseGroup {
-		this.parsePolyGroup
 	}
 
 	parsePolyGroup {
@@ -98,9 +94,9 @@ MareaParser {
 	}
 
 	parseSeq {
-		this.parseTermMod;
+		this.parseTerm;
 		while { [\integer, \float, \string, '~', '<', '{', '['].includes(curToken[\type]) } {
-			this.parseTermMod
+			this.parseTerm
 		};
 		while { curToken[\type] == ',' } {
 			this.match(',');
@@ -108,19 +104,15 @@ MareaParser {
 		}
 	}
 
-	parseTermMod {
-		this.parseTerm;
-		while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
-			this.parseModifier
-		}
-	}
-
 	parseTerm {
 		if ([\integer, \float, \string, '~'].includes(curToken[\type])) {
-			this.parseValue
+			this.parseValue;
+			while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
+				this.parseModifier
+			}
 		} {
 			if (['<', '{', '['].includes(curToken[\type])) {
-				this.parseGroup
+				this.parseExpr
 			} {
 				"ERROR: Expected value or expr".error
 			}
