@@ -21,6 +21,10 @@ MareaParser {
 
 		finished = false;
 
+		// Wrap everything inside a seq group,
+		// to account for patterns without an explicit grouping:
+		string = "[" ++ string ++ "]";
+
 		tokens = this.tokenize(string);
 		curTokenPos = 0;
 		curToken = tokens[curTokenPos];
@@ -45,35 +49,34 @@ MareaParser {
 	}
 
 	parseRoot {
-		if (['<', '{', '['].includes(curToken[\type])) {
-			this.parseExpr
-		} {
-			if ([\float, \integer, \string, '~'].includes(curToken[\type])) {
-				this.parseSeq
-			}
-		} {
-			"ERROR: Expected expr or seq".error
-		};
-	}
-
-	parseExpr {
-		if (curToken[\type] == '<') {
-			this.match('<');
-			this.parsePolym;
-			this.match('>')
-		} {
-			if (['{', '['].includes(curToken[\type])) {
-				this.parsePolym
-			}
-		} {
-			"ERROR: Expected '<' or polym".error
+		this.parseGroup;
+		while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
+			this.parseModifier
 		}
 	}
 
-	parsePolym {
+	parseGroup {
+		this.parsePolyGroup
+	}
+
+	parsePolyGroup {
+		if (curToken[\type] == '<') {
+			this.match('<');
+			this.parsePolyMGroup;
+			this.match('>')
+		} {
+			if (['{', '['].includes(curToken[\type])) {
+				this.parsePolyMGroup
+			}
+		} {
+			"ERROR: Expected '<' or polyMGroup".error
+		}
+	}
+
+	parsePolyMGroup {
 		if (curToken[\type] == '{') {
 			this.match('{');
-			this.parseGroup;
+			this.parseSeqGroup;
 			this.match('}');
 			if (curToken[\type] == '%') {
 				this.match('%');
@@ -81,14 +84,14 @@ MareaParser {
 			}
 		} {
 			if (curToken[\type] == '[') {
-				this.parseGroup
+				this.parseSeqGroup
 			}
 		} {
 			"ERROR: Expected '{' or group".error
 		}
 	}
 
-	parseGroup {
+	parseSeqGroup {
 		this.match('[');
 		this.parseSeq;
 		this.match(']')
@@ -98,6 +101,10 @@ MareaParser {
 		this.parseTermMod;
 		while { [\integer, \float, \string, '~', '<', '{', '['].includes(curToken[\type]) } {
 			this.parseTermMod
+		};
+		while { curToken[\type] == ',' } {
+			this.match(',');
+			this.parseSeq
 		}
 	}
 
@@ -113,7 +120,7 @@ MareaParser {
 			this.parseValue
 		} {
 			if (['<', '{', '['].includes(curToken[\type])) {
-				this.parseExpr
+				this.parseGroup
 			} {
 				"ERROR: Expected value or expr".error
 			}
