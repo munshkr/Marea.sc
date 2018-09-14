@@ -1,17 +1,83 @@
 # Marea grammar
 
-This is the grammar that Marea currently uses, written in Backus-Naur form and
-extended with regular expressions.  Although it is heavly inspired in
-TidalCycles language, it is not a 100% replica.
+This is the grammar that Marea currently uses, written in Extended Backus-Naur
+form (EBNF).  Although it is heavily inspired in the TidalCycles language, it
+is not a 100% replica.
+
+*FIXME: add bjorklund syntax*
 
 ```
-<expr>    ::= <term> (<s> <term>)*
-<term>    ::= <event> | '[' <expr> ']'
-<event>   ::= <atom> (':' <number>+)? (<op> <number>)?
-<atom>    ::= <number> | <string> | <rest>
-<number>  ::= [0-9]+
-<string>  ::= [A-Za-z]+
-<rest>    ::= '~'
-<op>      ::= '*' | '/'
-<s>       ::= [\s]+
+root = polym1 | seq ;
+polym1 = "<", s, polym, s, ">" | polym ;
+polym = "{", group, "}", ["%", number] | group ;
+group = "[", seq, "]" ;
+
+seq = termMod, {termMod} ;
+termMod = term, {modifier} ;
+term = value | polym1 ;
+
+modifier = densityMod ;
+densityMod = ("*", number) | sparsityMod ;
+sparsityMod = ("/", number) | replicateMod ;
+replicateMod = "!" | degradeMod ;
+degradeMod = "?" ;
+
+value = number | sample | rest;
+sample = string, [":", number] ;
+string = /[A-Za-z_]/, {/[A-Za-z0-9_\-]/} ;
+number = /[0-9]/, [(".", {/[0-9]/})] ;
+rest = "~" ;
 ```
+
+
+## Notes
+
+* Rests with `~`
+
+* Groups with `[` `]` (this is the "parenthesis" of expresions)
+
+    "[bd bd] [sd sd sd] [bd sd]"
+
+or by "marking out feet" with `.`
+
+    "bd bd . sd sd sd . bd sd"
+
+* Polyrhythms with `,`
+
+    "[bd bd bd, sd cp sd cp]"
+
+* Density `*` and sparsity `/` on events or groups:
+
+    "[bd sn]*2 cp"
+
+* Polymeters:
+
+    "{bd hh sn cp, arpy bass2 drum notes can}"
+    "{arpy bass2 drum notes can}%4"
+
+* Increment density by one with `!` (applies to event or group)
+
+    "bd!!"
+
+* Degrade event by half with `?` (applies to event or group)
+
+    "bd?"
+    "bd?!"
+    "bd!??"
+
+* `< ... >` is the same as `{ ... }%1`
+
+* Bjorkund with `v(x,y)` (v, x and y are values or groups)
+
+    "bd(3,8) sn(5,8)"
+    "bd([5 3]/2,8)"
+
+
+    []
+    {0}
+    {1 2}%2
+    bd sn
+    [bd sn]
+    {[bd sn]}
+    [{bd sn}]
+    [{sd} bd]
