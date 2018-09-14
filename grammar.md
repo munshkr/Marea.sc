@@ -1,32 +1,36 @@
 # Marea grammar
 
 This is the grammar that Marea currently uses, written in Extended Backus-Naur
-form (EBNF).  Although it is heavily inspired in the TidalCycles language, it
-is not a 100% replica.
-
-*FIXME: add bjorklund syntax*
+form (EBNF), and with regular expressions.  Although it is heavily inspired in
+the TidalCycles language, it is not a 100% replica.
 
 ```
-root = polym1 | seq ;
-polym1 = "<", s, polym, s, ">" | polym ;
+root = expr | seq ;
+
+expr = "<", polym, ">" | polym ;
 polym = "{", group, "}", ["%", number] | group ;
 group = "[", seq, "]" ;
 
 seq = termMod, {termMod} ;
 termMod = term, {modifier} ;
-term = value | polym1 ;
+term = value | expr ;
 
-modifier = densityMod ;
+modifier = bjorklundMod ;
+bjorklundMod = ("(", expr, ",", expr, ")") | densityMod ;
 densityMod = ("*", number) | sparsityMod ;
 sparsityMod = ("/", number) | replicateMod ;
 replicateMod = "!" | degradeMod ;
 degradeMod = "?" ;
 
-value = number | sample | rest;
-sample = string, [":", number] ;
-string = /[A-Za-z_]/, {/[A-Za-z0-9_\-]/} ;
-number = /[0-9]/, [(".", {/[0-9]/})] ;
+value = number | sample | rest ;
+number = float | integer ;
+sample = string, [":", integer] ;
 rest = "~" ;
+
+float = ["-"], /[0-9]/, {/[0-9]/}, ".", {/[0-9]/} ;
+integer = ["-"], /[0-9]/, {/[0-9]/} ;
+string = /[A-Za-z_]/, {/[A-Za-z0-9_\-]/} ;
+
 ```
 
 
