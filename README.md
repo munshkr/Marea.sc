@@ -1,9 +1,7 @@
 # Marea.sc
 
-Some kind of TidalCycles implementation for SuperCollider.  Because why not?
+A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 
-Actually just trying to have a better understanding of TidalCycles and improve
-my Sclang.
 
 ## To do
 
@@ -20,11 +18,11 @@ my Sclang.
 - [ ] Start writing unit tests
 - [ ] Write documentation
 
+
 ## How it ~~looks~~will look like?
 
-This **does not work and is subject to change**, but it might look like this...
-
-Using ProxySpace:
+Syntax **is subject to change**, but it looks like this (Tidal parser still not
+implemented yet):
 
 ```supercollider
 (
@@ -43,12 +41,13 @@ p.makeTempoClock;
     .every(6, _ + (octave: "5 6 7".t))
   << (s: "fm"),
   << (octave: 5)
-  << (modP: "0 2 4 6".t)
+  << (modP: "0 2 4 6".t).every(4, _ * 2)
   << (index: "0 20".t)
   << (lpf: MP.saw1.slow(2) * 3000 + 250)
   << (lpq: MP.sine.slow(2).scale(0.05, 0.2));
 )
 ```
+
 
 ## Some explanations
 
