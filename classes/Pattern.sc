@@ -100,6 +100,7 @@ MareaPattern {
 
 	merge { |rpat, mergeFn|
 		rpat = rpat.mp;
+		mergeFn = mergeFn ? { |a, b| b };
 		^MareaPattern { |start, end|
 			var events = List[];
 			this.(start, end).do { |ev|
