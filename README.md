@@ -19,7 +19,7 @@ A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 - [ ] Write documentation
 
 
-## How it ~~looks~~ like?
+## How it looks like?
 
 Syntax **is subject to change**, but it looks like this (Bjorklund patterns
 still not working):
