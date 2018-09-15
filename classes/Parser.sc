@@ -65,7 +65,7 @@ MareaParser {
 				this.parsePolyMGroup
 			}
 		} {
-			"ERROR: Expected '<' or polyMGroup".error
+			this.error("'<' or polyMGroup")
 		}
 	}
 
@@ -83,7 +83,7 @@ MareaParser {
 				this.parseSeqGroup
 			}
 		} {
-			"ERROR: Expected '{' or group".error
+			this.error("'{' or seqGroup")
 		}
 	}
 
@@ -114,7 +114,7 @@ MareaParser {
 			if (['<', '{', '['].includes(curToken[\type])) {
 				this.parseExpr
 			} {
-				"ERROR: Expected value or expr".error
+				this.error("value or expr")
 			}
 		}
 	}
@@ -134,7 +134,7 @@ MareaParser {
 			if (['*', '/', '!', '?'].includes(curToken[\type])) {
 				this.parseDensityMod
 			} {
-				"ERROR: Expected '(' or density modifier".error
+				this.error("'(' or other modifiers")
 			}
 		}
 	}
@@ -147,7 +147,7 @@ MareaParser {
 			if (['/', '!', '?'].includes(curToken[\type])) {
 				this.parseSparsityMod
 			} {
-				"ERROR: Expected '*' or sparsity modifier".error
+				this.error("'*' or other modifiers")
 			}
 		}
 	}
@@ -160,7 +160,7 @@ MareaParser {
 			if (['!', '?'].includes(curToken[\type])) {
 				this.parseReplicateMod
 			} {
-				"ERROR: Expected '/' or replicate modifier".error
+				this.error("'/' or other modifiers")
 			}
 		}
 	}
@@ -172,7 +172,7 @@ MareaParser {
 			if (['?'].includes(curToken[\type])) {
 				this.parseDegradeMod
 			} {
-				"ERROR: Expected '!' or degrade modifier".error
+				this.error("'!' or other modifier")
 			}
 		}
 	}
@@ -191,7 +191,7 @@ MareaParser {
 				if (curToken[\type] == '~') {
 					this.parseRest
 				} {
-					"ERROR: Expected number, sample or rest".error
+					this.error("number, sample or rest")
 				}
 			}
 		}
@@ -204,7 +204,7 @@ MareaParser {
 			if (curToken[\type] == \float) {
 				this.parseFloat
 			} {
-				"ERROR: Expected integer or float".error
+				this.error("integer or float")
 			}
 		}
 	}
@@ -240,13 +240,17 @@ MareaParser {
 	match { |expectedTokenType|
 		var token;
 		if (curToken.isNil.not and: { curToken[\type] != expectedTokenType }) {
-			Error("Expected '%', but found '%'".format(expectedTokenType, curToken[\type])).throw;
+			this.error(expectedTokenType)
 		};
-        token = curToken;
+		token = curToken;
 		if (curTokenPos < tokens.size) {
-            curTokenPos = curTokenPos + 1;
+			curTokenPos = curTokenPos + 1;
 			curToken = tokens[curTokenPos];
 		};
 		^token
+	}
+
+	error { |expectedTokens|
+		Error("At %: expected % but found %".format(curTokenPos, expectedTokens, curToken[\type])).throw
 	}
 }
