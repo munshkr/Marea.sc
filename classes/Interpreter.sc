@@ -35,9 +35,9 @@ MareaInterpreter {
 	*/
 
 	eval_seqGroup { |node|
-		var groups;
-		groups = node.value.evalWith(this);
-		^MareaPattern.stack(groups.collect { |g| MareaPattern.fastcat(g) })
+		var termGroups;
+		termGroups = node.value.evalWith(this);
+		^MareaPattern.stack(termGroups.collect { |g| MareaPattern.fastcat(g) })
 	}
 
 	eval_groupBody { |node|

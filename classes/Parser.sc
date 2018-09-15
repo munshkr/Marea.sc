@@ -106,7 +106,7 @@ MareaParser {
 		};
 		if (curToken[\type] == ',') {
 			this.match(',');
-			sibling.add(this.parseGroupBody)
+			sibling = this.parseGroupBody
 		}
 		^MareaASTNode(\groupBody, (terms: terms, sibling: sibling))
 	}
