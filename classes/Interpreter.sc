@@ -60,6 +60,13 @@ MareaInterpreter {
 		^value
 	}
 
+	eval_bjorklundMod { |node|
+		var x, y;
+		x = node.value.x.evalWith(this);
+		y = node.value.y.evalWith(this);
+		^[\bjorklund, [x, y]]
+	}
+
 	eval_densityMod { |node|
 		var value = node.value.evalWith(this);
 		^[\density, [value]]

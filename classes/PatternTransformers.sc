@@ -84,4 +84,10 @@
 		// The 0 value is an arbitrary value, and will be overwritten by the merge operator <<.
 		^0.mp.density(num) << this
 	}
+
+	bjorklund { |hits, total|
+		var bjorkPat;
+		bjorkPat = Bjorklund.new(hits, total).collect { |v| if (v > 0) { v } { nil } }.mp;
+		^(bjorkPat << this)
+	}
 }
