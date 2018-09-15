@@ -1,13 +1,25 @@
 MareaASTNode {
-	var <type, <token, <value;
+	var <type, <value;
 
-	*new { |type, token, value|
-		^super.new.newCopyArgs(type, token, value);
+	*new { |type, value|
+		^super.newCopyArgs(type, value)
+	}
+
+	printOn { | stream |
+		stream << "(" << type << " " << value << ")";
+	}
+
+	== { |that|
+		^this.compareObject(that, #[\type, \value])
+	}
+
+	hash {
+		^this.instVarHash(#[\type, \value])
 	}
 }
 
 MareaParser {
-	var tokens, curTokenPos, curToken, curList, finished;
+	var tokens, curTokenPos, curToken, curNode, finished;
 
 	const <tokenRegex = "[\\[\\]\\(\\){},%/\\*!\\?~]|[A-Za-z0-9\._\\-]+";
 	const <regexes = #[
@@ -17,7 +29,7 @@ MareaParser {
 	];
 
 	parse { |string|
-		var result;
+		var expr;
 
 		finished = false;
 
@@ -29,10 +41,10 @@ MareaParser {
 		curTokenPos = 0;
 		curToken = tokens[curTokenPos];
 
-		this.parseExpr;
+		expr = this.parseExpr;
 		this.match(\end);
 
-		^result;
+		^expr;
 	}
 
 	tokenize { |string|
@@ -49,20 +61,28 @@ MareaParser {
 	}
 
 	parseExpr {
-		this.parsePolyGroup;
+		var modifiers = List[];
+		var group = this.parseGroup;
 		while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
-			this.parseModifier
+			modifiers.add(this.parseModifier)
 		}
+		^MareaASTNode(\expr, (group: group, modifiers: modifiers))
+	}
+
+	parseGroup {
+		^this.parsePolyGroup
 	}
 
 	parsePolyGroup {
 		if (curToken[\type] == '<') {
+			var body;
 			this.match('<');
-			this.parsePolyMGroup;
+			body = this.parsePolyMGroup;
 			this.match('>')
+			^MareaASTNode(\polyGroup, (body: body))
 		} {
 			if (['{', '['].includes(curToken[\type])) {
-				this.parsePolyMGroup
+				^this.parsePolyMGroup
 			}
 		} {
 			this.error("'<' or polyMGroup")
@@ -71,16 +91,18 @@ MareaParser {
 
 	parsePolyMGroup {
 		if (curToken[\type] == '{') {
+			var body, mod;
 			this.match('{');
-			this.parseSeqGroup;
+			body = this.parseSeqGroup;
 			this.match('}');
 			if (curToken[\type] == '%') {
 				this.match('%');
-				this.parseNumber;
+				mod = this.parseNumber;
 			}
+			^MareaASTNode(\polyMGroup, (body: body, mod: mod))
 		} {
 			if (curToken[\type] == '[') {
-				this.parseSeqGroup
+				^this.parseSeqGroup
 			}
 		} {
 			this.error("'{' or seqGroup")
@@ -88,31 +110,38 @@ MareaParser {
 	}
 
 	parseSeqGroup {
+		var body;
 		this.match('[');
-		this.parseSeq;
+		body = this.parseSeq;
 		this.match(']')
+		^MareaASTNode(\seqGroup, (body: body))
 	}
 
 	parseSeq {
-		this.parseTerm;
+		var children = List[];
+		var terms = List[];
+		terms.add(this.parseTerm);
 		while { [\integer, \float, \string, '~', '<', '{', '['].includes(curToken[\type]) } {
-			this.parseTerm
+			terms.add(this.parseTerm)
 		};
 		while { curToken[\type] == ',' } {
 			this.match(',');
-			this.parseSeq
+			children.add(this.parseSeq)
 		}
+		^MareaASTNode(\seq, (terms: terms, children: children))
 	}
 
 	parseTerm {
 		if ([\integer, \float, \string, '~'].includes(curToken[\type])) {
-			this.parseValue;
+			var value, modifiers = List[];
+			value = this.parseValue;
 			while { ['(', '*', '/', '!', '?'].includes(curToken[\type]) } {
-				this.parseModifier
+				modifiers.add(this.parseModifier)
 			}
+			^MareaASTNode(\term, (value: value, modifiers: modifiers))
 		} {
 			if (['<', '{', '['].includes(curToken[\type])) {
-				this.parseExpr
+				^this.parseExpr
 			} {
 				this.error("value or expr")
 			}
@@ -120,19 +149,21 @@ MareaParser {
 	}
 
 	parseModifier {
-		this.parseBjorklundMod;
+		^this.parseBjorklundMod;
 	}
 
 	parseBjorklundMod {
 		if (curToken[\type] == '(') {
+			var x, y;
 			this.match('(');
-			this.parseExpr;
+			x = this.parseExpr;
 			this.match(',');
-			this.parseExpr;
-			this.match(')')
+			y = this.parseExpr;
+			this.match(')');
+			^MareaASTNode(\bjorklundMod, (x: x, y: y))
 		} {
 			if (['*', '/', '!', '?'].includes(curToken[\type])) {
-				this.parseDensityMod
+				^this.parseDensityMod
 			} {
 				this.error("'(' or other modifiers")
 			}
@@ -141,11 +172,13 @@ MareaParser {
 
 	parseDensityMod {
 		if (curToken[\type] == '*') {
+			var value;
 			this.match('*');
-			this.parseNumber;
+			value = this.parseNumber;
+			^MareaASTNode(\densityMod, (value: value))
 		} {
 			if (['/', '!', '?'].includes(curToken[\type])) {
-				this.parseSparsityMod
+				^this.parseSparsityMod
 			} {
 				this.error("'*' or other modifiers")
 			}
@@ -154,11 +187,13 @@ MareaParser {
 
 	parseSparsityMod {
 		if (curToken[\type] == '/') {
+			var value;
 			this.match('/');
-			this.parseNumber;
+			value = this.parseNumber;
+			^MareaASTNode(\sparsityMod, (value: value))
 		} {
 			if (['!', '?'].includes(curToken[\type])) {
-				this.parseReplicateMod
+				^this.parseReplicateMod
 			} {
 				this.error("'/' or other modifiers")
 			}
@@ -168,9 +203,10 @@ MareaParser {
 	parseReplicateMod {
 		if (curToken[\type] == '!') {
 			this.match('!');
+			^MareaASTNode(\replicateMod)
 		} {
 			if (['?'].includes(curToken[\type])) {
-				this.parseDegradeMod
+				^this.parseDegradeMod
 			} {
 				this.error("'!' or other modifier")
 			}
@@ -179,17 +215,18 @@ MareaParser {
 
 	parseDegradeMod {
 		this.match('?');
+		^MareaASTNode(\degradeMod)
 	}
 
 	parseValue {
 		if ([\integer, \float].includes(curToken[\type])) {
-			this.parseNumber
+			^this.parseNumber
 		} {
 			if (curToken[\type] == \string) {
-				this.parseSample
+				^this.parseSample
 			} {
 				if (curToken[\type] == '~') {
-					this.parseRest
+					^this.parseRest
 				} {
 					this.error("number, sample or rest")
 				}
@@ -199,10 +236,10 @@ MareaParser {
 
 	parseNumber {
 		if (curToken[\type] == \integer) {
-			this.parseInteger
+			^this.parseInteger
 		} {
 			if (curToken[\type] == \float) {
-				this.parseFloat
+				^this.parseFloat
 			} {
 				this.error("integer or float")
 			}
@@ -210,31 +247,33 @@ MareaParser {
 	}
 
 	parseSample {
-		this.parseString;
+		var name, index;
+		name = this.parseString;
 		if (curToken[\type] == ':') {
 			this.match(':');
-			this.parseInteger
-		}
+			index = this.parseInteger
+		};
+		^MareaASTNode(\sample, (name: name, index: index))
 	}
 
 	parseString {
-		"String: %".format(curToken[\string]).postln;
 		this.match(\string)
+		^MareaASTNode(\string, (value: curToken[\string]))
 	}
 
 	parseInteger {
-		"Integer: %".format(curToken[\string]).postln;
 		this.match(\integer)
+		^MareaASTNode(\integer, (value: curToken[\string].asInt))
 	}
 
 	parseFloat {
-		"Float: %".format(curToken[\string]).postln;
 		this.match(\float)
+		^MareaASTNode(\integer, (value: curToken[\string].asFloat))
 	}
 
 	parseRest {
-		"Rest".postln;
 		this.match('~')
+		^MareaASTNode(\rest)
 	}
 
 	match { |expectedTokenType|
