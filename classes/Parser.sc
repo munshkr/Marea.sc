@@ -5,8 +5,13 @@ MareaASTNode {
 		^super.newCopyArgs(type, value)
 	}
 
-	printOn { | stream |
+	printOn { |stream|
 		stream << "(" << type << " " << value << ")";
+	}
+
+	evalWith { |interpreter|
+		var method = "eval_%".format(type).asSymbol;
+		^interpreter.perform(method, this)
 	}
 
 	== { |that|
@@ -297,5 +302,60 @@ MareaParser {
 
 	error { |expectedTokens|
 		Error("At %: expected % but found %".format(curTokenPos, expectedTokens, curToken[\type])).throw
+	}
+}
+
+MareaInterpreter {
+	var parser;
+
+	*new {
+		^super.new.init
+	}
+
+	init {
+		parser = MareaParser.new
+	}
+
+	eval { |string|
+		var node;
+		node = parser.parse(string);
+		^node.evalWith(this)
+	}
+
+	eval_expr { |expr|
+		// FIXME Modifiers ignored! (`expr.value[\modifiers]`)
+		"eval_expr(%)".format(expr).postln;
+		^expr.value[\group].evalWith(this)
+	}
+
+	eval_group { |group|
+		^group.value.accept(this)
+	}
+
+	eval_seqGroup { |seqGroup|
+		"eval_seqGroup(%)".format(seqGroup).postln;
+		^seqGroup.value.evalWith(this)
+	}
+
+	eval_seq { |seq|
+		var terms, sibling;
+		"eval_seq(%)".format(seq).postln;
+		terms = seq.value[\terms].collect(_.evalWith(this));
+		sibling = seq.value[\sibling];
+		if (sibling.isNil.not) { sibling = sibling.evalWith(this) };
+		^terms.asArray.fastcat.overlay(sibling)
+	}
+
+	eval_term { |term|
+		// FIXME Modifiers ignored! (`term.value[\modifiers]`)
+		var value;
+		"eval_term(%)".format(term).postln;
+		value = term.value[\value].evalWith(this);
+		^value.mp
+	}
+
+	eval_integer { |integer|
+		"eval_integer(%)".format(integer).postln;
+		^integer.value.mp
 	}
 }
