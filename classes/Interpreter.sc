@@ -23,16 +23,17 @@ MareaInterpreter {
 		^group
 	}
 
-	eval_group { |node|
+	eval_polyGroup { |node|
+		// TODO
 		^node.value.evalWith(this)
 	}
 
-	/*
-	eval_polyGroup { |polyGroup|
-		// FIXME
-		^polyGroup.value.evalWith(this)
+	eval_polyMGroup { |node|
+		var body = node.value[\body].evalWith(this);
+		var mod = node.value[\mod].evalWith(this);
+		// TODO
+		^node.value.evalWith(this)
 	}
-	*/
 
 	eval_seqGroup { |node|
 		var termGroups;
