@@ -1,5 +1,5 @@
 MareaParser {
-	var tokens, curTokenPos, curToken, curNode, finished;
+	var tokens, curTokenPos, curToken, curString, finished;
 
 	const <tokenRegex = "[<>{}\\[\\]\\(\\),%/\\*!\\?:~]|[A-Za-z0-9\._\\-]+";
 	const <regexes = #[
@@ -16,6 +16,7 @@ MareaParser {
 		// Wrap everything inside a seq group,
 		// to account for patterns without an explicit grouping:
 		string = "[" ++ string ++ "]";
+		curString = string;
 
 		tokens = this.tokenize(string);
 		curTokenPos = 0;
@@ -281,7 +282,10 @@ MareaParser {
 	}
 
 	error { |expectedTokens|
-		Error("At %: expected % but found %".format(curTokenPos, expectedTokens, curToken[\type])).throw
+		var tokenString = tokens.collect(_[\string]).join(" ");
+		var msg = "%\n".format(tokenString);
+		msg = msg ++ " ".dup(curTokenPos * 2).join ++ "^\n";
+		Error("Parser error at %: expected '%' but found '%'\n%".format(curTokenPos, expectedTokens, curToken[\type], msg)).throw
 	}
 }
 
