@@ -3,7 +3,7 @@
 A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 
 
-## How it looks like?
+## How it looks like *right now*?
 
 ```supercollider
 (
@@ -13,19 +13,14 @@ p.makeTempoClock;
 
 (
 ~x.play;
-~x = (n: "[0 2 [~ 3?] 5*2, [0(3,16)]/2, [7(5,16)]/2, [10(2,16,1)]/2]".t).mp
-    .slow(2)
+~x = (degree: "0(3,8), 1 3, 6 7, 8 ~ 9, 2(7,16)/2".t).mp
+    .every(2, {|p| p.within(0.75, 1, _.fast(2))})
     .every(3, _.brak)
-    .every(2, _.rotLeft(0.25))
-    .every(2, { |p| p.within(0.5, 1, _.gap(2)) })
-    .every(3, { |p| p.jux.rev.stut(3, 0.5, 0.5) })
-    .every(6, _ + (octave: "5 6 7".t))
-  << (s: "fm"),
-  << (octave: 5)
-  << (modP: "0 2 4 6".t).every(4, _ * 2)
-  << (index: "0 20".t)
-  << (lpf: MP.saw1.slow(2) * 3000 + 250)
-  << (lpq: MP.sine.slow(2).scale(0.05, 0.2));
+    .every(2, _.rotRight(0.125))
+  << (scale: Scale.dorian)
+  << (carPartial: "3".t).mp
+  << (modPartial: 2)
+  << (octave: 3).mp.every(3, {|p| p << (octave: "4 5".t) <<+ (degree: "3 4 5".t)})
 )
 ```
 
