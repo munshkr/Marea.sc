@@ -59,6 +59,6 @@
 
 + String {
 	t {
-		^MareaParser.new.parse(this)
+		^MareaInterpreter.new.eval(this)
 	}
 }
