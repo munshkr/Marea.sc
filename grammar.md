@@ -17,7 +17,7 @@ groupBody = term, {term}, [",", groupBody] ;
 term = (value, {modifier}) | expr ;
 
 modifier = bjorklundMod ;
-bjorklundMod = ("(", expr, ",", expr, ")") | densityMod ;
+bjorklundMod = ("(", number, ",", number, ")") | densityMod ;
 densityMod = ("*", number) | sparsityMod ;
 sparsityMod = ("/", number) | replicateMod ;
 replicateMod = ("!", [replicateMod]) | degradeMod ;

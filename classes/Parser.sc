@@ -136,9 +136,9 @@ MareaParser {
 		if (curToken[\type] == '(') {
 			var x, y;
 			this.match('(');
-			x = this.parseExpr;
+			x = this.parseNumber;
 			this.match(',');
-			y = this.parseExpr;
+			y = this.parseNumber;
 			this.match(')');
 			^MareaASTNode(\bjorklundMod, (x: x, y: y))
 		} {
