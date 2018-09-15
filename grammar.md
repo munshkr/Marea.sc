@@ -20,7 +20,7 @@ modifier = bjorklundMod ;
 bjorklundMod = ("(", expr, ",", expr, ")") | densityMod ;
 densityMod = ("*", number) | sparsityMod ;
 sparsityMod = ("/", number) | replicateMod ;
-replicateMod = "!" | degradeMod ;
+replicateMod = ("!", [replicateMod]) | degradeMod ;
 degradeMod = "?" ;
 
 value = number | sample | rest ;

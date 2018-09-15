@@ -207,8 +207,13 @@ MareaParser {
 
 	parseReplicateMod {
 		if (curToken[\type] == '!') {
+			var repetitions = 1;
 			this.match('!');
-			^MareaASTNode(\replicateMod)
+			while { curToken[\type] == '!' } {
+				repetitions = repetitions + 1;
+				this.match('!');
+			}
+			^MareaASTNode(\replicateMod, repetitions)
 		} {
 			if (['?'].includes(curToken[\type])) {
 				^this.parseDegradeMod
