@@ -112,15 +112,7 @@ MareaPattern {
 					value = if (value.isKindOf(Event) && rev.value.isKindOf(Event)) {
 						value.merge(rev.value, mergeFn)
 					} {
-						if (value.isKindOf(Event)) {
-							value.collect { |v| mergeFn.(v, rev.value) }
-						} {
-							if (rev.value.isKindOf(Event)) {
-								rev.value.collect { |v| mergeFn.(ev.value, v) }
-							} {
-								mergeFn.(value, rev.value)
-							}
-						}
+						mergeFn.(value, rev.value)
 					}
 				};
 				events.add(MareaEvent(ev.positionArc, ev.activeArc, value))
