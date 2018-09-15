@@ -79,7 +79,7 @@ MareaParser {
 			this.match('<');
 			body = this.parsePolyMGroup;
 			this.match('>')
-			^MareaASTNode(\polyGroup, (body: body))
+			^MareaASTNode(\polyGroup, body)
 		} {
 			if (['{', '['].includes(curToken[\type])) {
 				^this.parsePolyMGroup
@@ -114,7 +114,7 @@ MareaParser {
 		this.match('[');
 		body = this.parseSeq;
 		this.match(']')
-		^MareaASTNode(\seqGroup, (body: body))
+		^MareaASTNode(\seqGroup, body)
 	}
 
 	parseSeq {
@@ -175,7 +175,7 @@ MareaParser {
 			var value;
 			this.match('*');
 			value = this.parseNumber;
-			^MareaASTNode(\densityMod, (value: value))
+			^MareaASTNode(\densityMod, value)
 		} {
 			if (['/', '!', '?'].includes(curToken[\type])) {
 				^this.parseSparsityMod
@@ -190,7 +190,7 @@ MareaParser {
 			var value;
 			this.match('/');
 			value = this.parseNumber;
-			^MareaASTNode(\sparsityMod, (value: value))
+			^MareaASTNode(\sparsityMod, value)
 		} {
 			if (['!', '?'].includes(curToken[\type])) {
 				^this.parseReplicateMod
@@ -258,17 +258,17 @@ MareaParser {
 
 	parseString {
 		this.match(\string)
-		^MareaASTNode(\string, (value: curToken[\string]))
+		^MareaASTNode(\string, curToken[\string])
 	}
 
 	parseInteger {
 		this.match(\integer)
-		^MareaASTNode(\integer, (value: curToken[\string].asInt))
+		^MareaASTNode(\integer, curToken[\string].asInt)
 	}
 
 	parseFloat {
 		this.match(\float)
-		^MareaASTNode(\integer, (value: curToken[\string].asFloat))
+		^MareaASTNode(\integer, curToken[\string].asFloat)
 	}
 
 	parseRest {
