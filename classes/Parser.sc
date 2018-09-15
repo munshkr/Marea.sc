@@ -133,7 +133,7 @@ MareaParser {
 			this.match(',');
 			sibling.add(this.parseGroupBody)
 		}
-		^MareaASTNode(\seq, (terms: terms, sibling: sibling))
+		^MareaASTNode(\groupBody, (terms: terms, sibling: sibling))
 	}
 
 	parseTerm {
