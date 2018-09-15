@@ -3,26 +3,7 @@
 A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 
 
-## To do
-
-- [x] Basic functionality of Pattern and some functions
-- [x] Event playing
-- [x] ProxySpace compatibility
-- [x] `+`, `-`, `*`, `/` operators for patterns
-- [x] Refactor methods in classes that extend Pattern
-- [x] Tidal Parser
-- [ ] Define palindrome, rev, cut, jux, juxBy
-- [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)
-- [ ] Support for patterns on slow/fast/etc. using unwrap
-- [ ] Define a way to add dynamically define instance/class Pattern methods
-- [ ] Start writing unit tests
-- [ ] Write documentation
-
-
 ## How it looks like?
-
-Syntax **is subject to change**, but it looks like this (Bjorklund patterns
-still not working):
 
 ```supercollider
 (
@@ -47,6 +28,22 @@ p.makeTempoClock;
   << (lpq: MP.sine.slow(2).scale(0.05, 0.2));
 )
 ```
+
+
+## To do
+
+- [x] Basic functionality of Pattern and some functions
+- [x] Event playing
+- [x] ProxySpace compatibility
+- [x] `+`, `-`, `*`, `/` operators for patterns
+- [x] Refactor methods in classes that extend Pattern
+- [x] Tidal Parser
+- [ ] Define palindrome, rev, cut, jux, juxBy
+- [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)
+- [ ] Support for patterns on slow/fast/etc. using unwrap
+- [ ] Define a way to add dynamically define instance/class Pattern methods
+- [ ] Start writing unit tests
+- [ ] Write documentation
 
 
 ## Some explanations
