@@ -44,10 +44,15 @@
 	}
 
 	degradeBy { |value|
-		^(this <> MP.rand)
-		.filterEventValue { |v| v[v.size - 1] > value }
+		^this.merge(MP.rand, { |a, b| [a, b] })
+		.filterEventValue { |v|
+			if (v.isKindOf(Event)) { v = v[v.keys.asArray[0]] };
+			v[v.size - 1] > value
+		}
 		.withEventValue { |v|
-			var res = v[0..v.size-2];
+			var res;
+			if (v.isKindOf(Event)) { v = v[v.keys.asArray[0]] };
+			res = v[0..v.size-2];
 			if (res.size == 1) { res = res[0] };
 			res
 		}
