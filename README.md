@@ -10,7 +10,7 @@ A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 - [x] ProxySpace compatibility
 - [x] `+`, `-`, `*`, `/` operators for patterns
 - [x] Refactor methods in classes that extend Pattern
-- [ ] Tidal Parser
+- [x] Tidal Parser
 - [ ] Define palindrome, rev, cut, jux, juxBy
 - [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)
 - [ ] Support for patterns on slow/fast/etc. using unwrap
@@ -19,10 +19,10 @@ A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 - [ ] Write documentation
 
 
-## How it ~~looks~~will look like?
+## How it ~~looks~~ like?
 
-Syntax **is subject to change**, but it looks like this (Tidal parser still not
-implemented yet):
+Syntax **is subject to change**, but it looks like this (Bjorklund patterns
+still not working):
 
 ```supercollider
 (
