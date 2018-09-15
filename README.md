@@ -75,17 +75,36 @@ except for the following classes:
 * `Nil`, `Rest`: Creates a *silence* pattern
 * `Array`: Calls `#mp` on all of its elements and then `#fastcat` on the new
   array.
-* `Dictionary`: Calles `#mp` on its values and then creates a new pattern whose
-  event values are Associations.
+* `Event`: Calls `#mp` on its values and creates a new pattern whose
+  event values are Events with their keys and values merged.
 
 ```supercollider
 // silence/rest
 nil.mp.(0, 1)  //-> [ ]
 
-(k: 1, a: 2).mp.(0, 1)  //-> [ E(0/1 1/1, 0/1 1/1, (k -> 1)), E(0/1 1/1, 0/1 1/1, (a -> 2)) ]
+(k: 1, a: 2).mp.(0, 1)  //-> [ E(0/1 1/1, 0/1 1/1, ( 'a': 1, 'k': foo )) ]
 ```
 
-...
+### Tidal language parser
+
+In Tidal you can write Patterns in a more concise way as a string in a special
+language.  You can read more about it at the [Tidal
+docs](https://tidalcycles.org/patterns.html). There is a grammar written in
+EBNF notation for the precise implementation of the language in Marea.  You can
+read more in the [grammar.md](grammar.md) file.
+
+In Marea you just write your pattern as a String and then call the `t` method:
+
+```supercollider
+"1 2 3".t  //-> a MP
+"1 2 3".t.(0, 1)   //-> [ E(0/1 1/3, 0/1 1/3, 1), E(1/3 2/3, 1/3 2/3, 2), E(2/3 1/1, 2/3 1/1, 3) ]
+```
+
+So you would use it like this:
+
+```supercollider
+~x = (s: "[bd sn, hh hh ~ hh]".t).mp
+```
 
 ## Contributing
 
