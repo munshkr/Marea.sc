@@ -24,19 +24,12 @@ MareaInterpreter {
 	}
 
 	eval_polyGroup { |node|
-		// TODO
-		^node.value.evalWith(this)
-	}
-
-	eval_polyMGroup { |node|
 		var termGroups, mod, patterns;
 		termGroups = node.value[\body].evalWith(this);
 		mod = node.value[\mod];
 		mod = if (mod.isNil) { termGroups[0].size } { mod.evalWith(this) };
-		"mod: %".format(mod).postln;
-		"termGroups: %".format(termGroups).postln;
 		patterns = termGroups.collect { |group|
-			MP.fastcat(group).density(mod / group.size)
+			MP.fastcat(group).density(mod %/ group.size)
 		};
 		^MareaPattern.stack(patterns)
 	}

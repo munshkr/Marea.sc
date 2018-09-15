@@ -10,8 +10,7 @@ root = expr ;
 expr = group, {modifier} ;
 
 group = polyGroup ;
-polyGroup = "<", groupBody, ">" | polyMGroup ;
-polyMGroup = "{", groupBody, "}", ["%", number] | seqGroup ;
+polyGroup = "{", groupBody, "}", ["%", number] | "<", groupBody, ">" | seqGroup ;
 seqGroup = "[", groupBody, "]" ;
 groupBody = term, {term}, [",", groupBody] ;
 term = (value, {modifier}) | expr ;

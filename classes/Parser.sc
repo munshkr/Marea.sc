@@ -55,22 +55,6 @@ MareaParser {
 	}
 
 	parsePolyGroup {
-		if (curToken[\type] == '<') {
-			var body;
-			this.match('<');
-			body = this.parseGroupBody;
-			this.match('>');
-			^MareaASTNode(\polyGroup, body)
-		} {
-			if (['{', '['].includes(curToken[\type])) {
-				^this.parsePolyMGroup
-			}
-		} {
-			this.error("'<' or polyMGroup")
-		}
-	}
-
-	parsePolyMGroup {
 		if (curToken[\type] == '{') {
 			var body, mod;
 			this.match('{');
@@ -80,13 +64,21 @@ MareaParser {
 				this.match('%');
 				mod = this.parseNumber;
 			}
-			^MareaASTNode(\polyMGroup, (body: body, mod: mod))
+			^MareaASTNode(\polyGroup, (body: body, mod: mod))
 		} {
-			if (curToken[\type] == '[') {
-				^this.parseSeqGroup
+			if (curToken[\type] == '<') {
+				var body;
+				this.match('<');
+				body = this.parseGroupBody;
+				this.match('>')
+				^MareaASTNode(\polyGroup, (body: body, mod: MareaASTNode(\integer, 1)))
+			} {
+				if (curToken[\type] == '[') {
+					^this.parseSeqGroup
+				} {
+					this.error("'{', '<' or '['")
+				}
 			}
-		} {
-			this.error("'{' or seqGroup")
 		}
 	}
 
