@@ -21,7 +21,7 @@ MareaASTNode {
 MareaParser {
 	var tokens, curTokenPos, curToken, curNode, finished;
 
-	const <tokenRegex = "[\\[\\]\\(\\){},%/\\*!\\?~]|[A-Za-z0-9\._\\-]+";
+	const <tokenRegex = "[<>{}\\[\\]\\(\\),%/\\*!\\?:~]|[A-Za-z0-9\._\\-]+";
 	const <regexes = #[
 		\float, "^-?[0-9]+\\.[0-9]*$",
 		\integer, "^-?[0-9]+$",
@@ -77,8 +77,8 @@ MareaParser {
 		if (curToken[\type] == '<') {
 			var body;
 			this.match('<');
-			body = this.parsePolyMGroup;
-			this.match('>')
+			body = this.parseGroupBody;
+			this.match('>');
 			^MareaASTNode(\polyGroup, body)
 		} {
 			if (['{', '['].includes(curToken[\type])) {
@@ -93,7 +93,7 @@ MareaParser {
 		if (curToken[\type] == '{') {
 			var body, mod;
 			this.match('{');
-			body = this.parseSeqGroup;
+			body = this.parseGroupBody;
 			this.match('}');
 			if (curToken[\type] == '%') {
 				this.match('%');
@@ -112,23 +112,23 @@ MareaParser {
 	parseSeqGroup {
 		var body;
 		this.match('[');
-		body = this.parseSeq;
+		body = this.parseGroupBody;
 		this.match(']')
 		^MareaASTNode(\seqGroup, body)
 	}
 
-	parseSeq {
-		var children = List[];
+	parseGroupBody {
 		var terms = List[];
+		var sibling;
 		terms.add(this.parseTerm);
 		while { [\integer, \float, \string, '~', '<', '{', '['].includes(curToken[\type]) } {
 			terms.add(this.parseTerm)
 		};
-		while { curToken[\type] == ',' } {
+		if (curToken[\type] == ',') {
 			this.match(',');
-			children.add(this.parseSeq)
+			sibling.add(this.parseGroupBody)
 		}
-		^MareaASTNode(\seq, (terms: terms, children: children))
+		^MareaASTNode(\seq, (terms: terms, sibling: sibling))
 	}
 
 	parseTerm {
@@ -257,18 +257,24 @@ MareaParser {
 	}
 
 	parseString {
-		this.match(\string)
-		^MareaASTNode(\string, curToken[\string])
+		var value;
+		value = curToken[\string];
+		this.match(\string);
+		^MareaASTNode(\string, value)
 	}
 
 	parseInteger {
-		this.match(\integer)
-		^MareaASTNode(\integer, curToken[\string].asInt)
+		var value;
+		value = curToken[\string].asInt;
+		this.match(\integer);
+		^MareaASTNode(\integer, value)
 	}
 
 	parseFloat {
-		this.match(\float)
-		^MareaASTNode(\integer, curToken[\string].asFloat)
+		var value;
+		value = curToken[\string].asFloat;
+		this.match(\float);
+		^MareaASTNode(\integer, value)
 	}
 
 	parseRest {

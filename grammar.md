@@ -10,10 +10,10 @@ root = expr ;
 expr = group, {modifier} ;
 
 group = polyGroup ;
-polyGroup = "<", polyMGroup, ">" | polyMGroup ;
-polyMGroup = "{", seqGroup, "}", ["%", number] | seqGroup ;
-seqGroup = "[", seq, "]" ;
-seq = term, {term}, {",", seq} ;
+polyGroup = "<", groupBody, ">" | polyMGroup ;
+polyMGroup = "{", groupBody, "}", ["%", number] | seqGroup ;
+seqGroup = "[", groupBody, "]" ;
+groupBody = term, {term}, [",", groupBody] ;
 term = (value, {modifier}) | expr ;
 
 modifier = bjorklundMod ;
