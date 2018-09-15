@@ -1,6 +1,6 @@
 + MareaPattern {
 	*pure { |atom|
-		^MareaPattern { |start, end|
+		^MP { |start, end|
 			var startPos, endPos;
 			start.isNumber.not.if { Error("start must be a number").throw };
 			end.isNumber.not.if { Error("end must be a number").throw };
@@ -16,11 +16,11 @@
 	}
 
 	*silence {
-		^MareaPattern { [] }
+		^MP { [] }
 	}
 
 	*cat { |array|
-		^MareaPattern { |start, end|
+		^MP { |start, end|
 			var l = array.size;
 			var r = start.floor;
 			var n = r % l;
@@ -31,21 +31,21 @@
 	}
 
 	*fastcat { |array|
-		^array.cat.fast(array.size);
+		^MP.cat(array).fast(array.size);
 	}
 
 	*stack { |patterns|
-		^patterns.inject(MareaPattern.silence, { |a, b| a.overlay(b) });
+		^patterns.inject(MP.silence, { |a, b| a.overlay(b) });
 	}
 
 	*signal { |fn|
-		^MareaPattern { |start, end|
+		^MP { |start, end|
 			if (start > end) { [] } { fn.(start).mp.(start, end) }
 		}
 	}
 
 	*rand {
-		^MareaPattern { |start, end|
+		^MP { |start, end|
 			var arc = MareaArc(start, end);
 			var startPos = start.asFloat.floor.asInt;
 			var endPos = end.asFloat.ceil.asInt;
@@ -60,10 +60,10 @@
 	}
 
 	*irand { |to|
-		^this.rand.withEventValue { |v| (v * to).asInteger }
+		^MP.rand.withEventValue { |v| (v * to).asInteger }
 	}
 
 	*sin {
-		^this.signal { |t| (sin(2*pi*t.asFloat) + 1) / 2 }
+		^MP.signal { |t| (sin(2*pi*t.asFloat) + 1) / 2 }
 	}
 }

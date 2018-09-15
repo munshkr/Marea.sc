@@ -29,10 +29,16 @@ MareaInterpreter {
 	}
 
 	eval_polyMGroup { |node|
-		var body = node.value[\body].evalWith(this);
-		var mod = node.value[\mod].evalWith(this);
-		// TODO
-		^node.value.evalWith(this)
+		var termGroups, mod, patterns;
+		termGroups = node.value[\body].evalWith(this);
+		mod = node.value[\mod];
+		mod = if (mod.isNil) { termGroups[0].size } { mod.evalWith(this) };
+		"mod: %".format(mod).postln;
+		"termGroups: %".format(termGroups).postln;
+		patterns = termGroups.collect { |group|
+			MP.fastcat(group).density(mod / group.size)
+		};
+		^MareaPattern.stack(patterns)
 	}
 
 	eval_seqGroup { |node|
@@ -47,7 +53,7 @@ MareaInterpreter {
 		sibling = node.value[\sibling];
 		termGroups = List[terms];
 		if (sibling.isNil.not) {
-			termGroups.add(sibling.evalWith(this))
+			termGroups.addAll(sibling.evalWith(this))
 		};
 		^termGroups.asArray
 	}
