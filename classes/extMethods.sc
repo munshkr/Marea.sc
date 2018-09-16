@@ -26,7 +26,7 @@
 + Array {
 	cat { ^MareaPattern.cat(this) }
 	fastcat { ^MareaPattern.fastcat(this) }
-	mp { ^this.fastcat }
+	mp { ^this.cat }
 }
 
 + Nil {
