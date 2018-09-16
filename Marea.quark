@@ -2,7 +2,7 @@
 \name: "Marea",
 \summary: "A TidalCycles pattern language implementation.",
 \author: "Damián Silvani",
-\version: 0.1.0,
+\version: "0.1.0",
 \license: "GPL",
 \dependencies: ["Rational", "Bjorklund", ]
 )
