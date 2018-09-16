@@ -33,11 +33,12 @@ p.makeTempoClock;
 - [x] `+`, `-`, `*`, `/` operators for patterns
 - [x] Refactor methods in classes that extend Pattern
 - [x] Tidal Parser
+- [x] Support for Pattern classes
 - [ ] Define palindrome, rev, cut, jux, juxBy
 - [ ] Define more signal patterns: saw, tri, pulse, envs (see Tidal refactor branch)
 - [ ] Support for patterns on slow/fast/etc. using unwrap
-- [ ] Define a way to add dynamically define instance/class Pattern methods
-- [ ] Start writing unit tests
+- [ ] Define a way to dynamically define instance/class Pattern methods
+- [ ] Write unit tests
 - [ ] Write documentation
 
 

@@ -62,3 +62,20 @@
 		^MareaInterpreter.new.eval(this)
 	}
 }
+
++ Stream {
+	mp {
+		var res = List[];
+		this.do { |v|
+			res.add(v);
+			if (res.size >= MP.maxEventsInStream) { ^res.asArray.mp }
+		};
+		^res.asArray.mp
+	}
+}
+
++ Pattern {
+	mp {
+		^this.asStream.mp
+	}
+}

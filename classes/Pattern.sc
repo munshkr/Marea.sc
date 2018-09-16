@@ -1,6 +1,8 @@
 MareaPattern {
 	var func;
 
+	const <maxEventsInStream = 128;
+
 	*new { |fn|
 		^super.newCopyArgs(fn)
 	}
