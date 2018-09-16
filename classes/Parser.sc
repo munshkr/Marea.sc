@@ -1,11 +1,11 @@
 MareaParser {
 	var tokens, curTokenPos, curToken, curString, finished;
 
-	const <tokenRegex = "[<>{}\\[\\]\\(\\),%/\\*!\\?:~]|[A-Za-z0-9\._\\-]+";
+	const <tokenRegex = "[<>{}\\[\\]\\(\\),%/\\*!\\?~]|[A-Za-z0-9\._\\-:]+";
 	const <regexes = #[
 		\float, "^-?[0-9]+\\.[0-9]*$",
 		\integer, "^-?[0-9]+$",
-		\string, "^[A-Za-z][A-Za-z0-9\\-_]*$"
+		\string, "^[A-Za-z][A-Za-z0-9\\-_:]*$"
 	];
 
 	parse { |string|
@@ -201,7 +201,7 @@ MareaParser {
 			^this.parseNumber
 		} {
 			if (curToken[\type] == \string) {
-				^this.parseSample
+				^this.parseString
 			} {
 				if (curToken[\type] == '~') {
 					^this.parseRest
@@ -222,16 +222,6 @@ MareaParser {
 				this.error("integer or float")
 			}
 		}
-	}
-
-	parseSample {
-		var name, index;
-		name = this.parseString;
-		if (curToken[\type] == ':') {
-			this.match(':');
-			index = this.parseInteger
-		};
-		^MareaASTNode(\sample, (name: name, index: index))
 	}
 
 	parseString {

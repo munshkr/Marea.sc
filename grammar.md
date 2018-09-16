@@ -22,14 +22,13 @@ sparsityMod = ("/", number) | replicateMod ;
 replicateMod = ("!", [replicateMod]) | degradeMod ;
 degradeMod = "?" ;
 
-value = number | sample | rest ;
+value = number | string | rest ;
 number = float | integer ;
-sample = string, [":", integer] ;
 rest = "~" ;
 
 float = ["-"], /[0-9]/, {/[0-9]/}, ".", {/[0-9]/} ;
 integer = ["-"], /[0-9]/, {/[0-9]/} ;
-string = /[A-Za-z_]/, {/[A-Za-z0-9_\-]/} ;
+string = /[A-Za-z_]/, {/[A-Za-z0-9_\-:]/} ;
 
 ```
 
