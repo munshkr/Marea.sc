@@ -3,6 +3,30 @@
 A [TidalCycles](https://tidalcycles.org/) port for SuperCollider.
 
 
+## Install
+
+Open a new document on your SC IDE and type:
+
+```
+Quarks.install("https://github.com/munshkr/Marea.sc");
+```
+
+After a few seconds, you should see the following printed in the Post window:
+
+```
+Installing Marea
+Installing Rational
+Rational installed
+Installing Bjorklund
+Bjorklund installed
+Marea installed
+-> Quark: Marea[0.1.0]
+```
+
+Finally recompile your class library. Go to `Language` menu, `Recompile class
+library`, or hit <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>.
+
+
 ## How it looks like *right now*?
 
 ```supercollider
