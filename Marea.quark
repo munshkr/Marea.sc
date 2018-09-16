@@ -1,8 +1,8 @@
 (
-\name: "Marea",
-\summary: "A TidalCycles pattern language implementation.",
-\author: "Damián Silvani",
-\version: "0.1.0",
-\license: "GPL",
-\dependencies: ["Rational", "Bjorklund", ]
+  \name: "Marea",
+  \summary: "A TidalCycles pattern language implementation.",
+  \author: "Damián Silvani",
+  \version: "0.1.0",
+  \license: "GPL-3.0-or-later",
+  \dependencies: ["https://github.com/munshkr/Rational", "Bjorklund"]
 )
