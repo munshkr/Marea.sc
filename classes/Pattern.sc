@@ -123,26 +123,30 @@ MareaPattern {
 		}
 	}
 
+	mergeRight { |rpat, mergeFn|
+		Error("not implemented yet").throw
+	}
+
 	<< { |rpat| ^this.merge(rpat, { |a, b| b }) }
-	// >> { |rpat| ^this.mergeRight(rpat, { |a, b| a }) }
+	>> { |rpat| ^this.mergeRight(rpat, { |a, b| a }) }
 	<<* { |rpat| ^this.merge(rpat, { |a, b| a * b }) }
 	* { |rpat| ^(this <<* rpat) }
-	// *>> { |rpat| ^this.mergeRight(rpat, { |a, b| a * b }) }
+	*>> { |rpat| ^this.mergeRight(rpat, { |a, b| a * b }) }
 	+ { |rpat| ^(this <<+ rpat) }
 	<<+ { |rpat| ^this.merge(rpat, { |a, b| a + b }) }
-	// +>> { |rpat| ^this.mergeRight(rpat, { |a, b| a + b }) }
+	+>> { |rpat| ^this.mergeRight(rpat, { |a, b| a + b }) }
 	/ { |rpat| ^(this <</ rpat) }
 	<</ { |rpat| ^this.merge(rpat, { |a, b| a / b }) }
-	// />> { |rpat| ^this.mergeRight(rpat, { |a, b| a / b }) }
+	/>> { |rpat| ^this.mergeRight(rpat, { |a, b| a / b }) }
 	- { |rpat| ^(this <<- rpat); }
 	<<- { |rpat| ^this.merge(rpat, { |a, b| a - b }) }
-	// ->> { |rpat| ^this.mergeRight(rpat, { |a, b| a - b }) }
+	->> { |rpat| ^this.mergeRight(rpat, { |a, b| a - b }) }
 	% { |rpat| ^(this <<% rpat); }
 	<<% { |rpat| ^this.merge(rpat, { |a, b| a % b }) }
-	// %>> { |rpat| ^this.mergeRight(rpat, { |a, b| a % b }) }
+	%>> { |rpat| ^this.mergeRight(rpat, { |a, b| a % b }) }
 	** { |rpat| ^(this <<** rpat); }
 	<<** { |rpat| ^this.merge(rpat, { |a, b| a ** b }) }
-	// **>> { |rpat| ^this.mergeRight(rpat, { |a, b| a ** b }) }
+	**>> { |rpat| ^this.mergeRight(rpat, { |a, b| a ** b }) }
 }
 
 MP : MareaPattern {}
