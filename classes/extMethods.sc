@@ -61,6 +61,10 @@
 	t {
 		^MareaInterpreter.new.eval(this)
 	}
+
+	parseMarea {
+		^MareaParser.new.parse(this)
+	}
 }
 
 + Stream {
