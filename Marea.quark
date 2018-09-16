@@ -4,5 +4,5 @@
   \author: "Damián Silvani",
   \version: "0.1.0",
   \license: "GPL-3.0-or-later",
-  \dependencies: ["https://github.com/munshkr/Rational", "Bjorklund"]
+  \dependencies: ["https://github.com/munshkr/Rational.sc", "Bjorklund"]
 )
