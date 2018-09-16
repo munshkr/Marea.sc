@@ -2,7 +2,7 @@
   name: "Marea",
   summary: "A TidalCycles pattern language implementation.",
   version: "0.1.0",
-  dependencies: ["Rational"],
+  dependencies: ["Rational", "Bjorklund"],
   license: "GPL",
   copyright: "Damián Silvani"
 )
