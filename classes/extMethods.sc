@@ -1,6 +1,5 @@
 + Object {
-	pure { ^MareaPattern.pure(this) }
-	mp { ^this.pure }
+	mp { ^MareaPattern.pure(this) }
 
 	<<* { |rpat| ^(this.mp <<* rpat) }
 	*>> { |rpat| ^(this.mp *>> rpat) }
@@ -18,14 +17,10 @@
 }
 
 + Interval {
-	cat { ^MareaPattern.cat(this) }
-	fastcat { ^MareaPattern.fastcat(this) }
-	mp { ^this.fastcat }
+	mp { ^this.cat }
 }
 
 + Array {
-	cat { ^MareaPattern.cat(this) }
-	fastcat { ^MareaPattern.fastcat(this) }
 	mp { ^this.cat }
 }
 
