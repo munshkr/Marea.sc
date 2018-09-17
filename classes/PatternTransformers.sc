@@ -86,8 +86,9 @@
 	}
 
 	bjorklund { |hits, total|
-		var bjorkPat;
-		bjorkPat = Bjorklund.new(hits, total).collect { |v| if (v > 0) { v } { nil } }.mp;
+		var bjorkPat = MP.fastcat(
+			Bjorklund.new(hits, total).collect { |v| if (v > 0) { v } { nil } }
+		);
 		^(bjorkPat << this)
 	}
 }
