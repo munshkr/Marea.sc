@@ -59,7 +59,7 @@
 	}
 
 	brak {
-		^this.when({ |s| s % 2 == 1 }, { |p| [p, MP.silence].fastcat.rotRight(1 %/ 4) })
+		^this.when({ |s| s % 2 == 1 }, { |p| MP.fastcat([p, MP.silence]).rotRight(1 %/ 4) })
 	}
 
 	degrade {

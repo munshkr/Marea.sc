@@ -17,11 +17,11 @@
 }
 
 + Interval {
-	mp { ^this.cat }
+	mp { ^MP.cat(this) }
 }
 
 + Array {
-	mp { ^this.cat }
+	mp { ^MP.cat(this) }
 }
 
 + Nil {
