@@ -159,4 +159,6 @@ MareaPattern {
 	**>> { |rpat| ^this.mergeRight(rpat, { |a, b| a ** b }) }
 }
 
-MP : MareaPattern {}
+MP : MareaPattern {
+	printOn { |stream| stream << "a MareaPattern" }
+}
