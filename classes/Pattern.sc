@@ -101,30 +101,40 @@ MareaPattern {
 	}
 
 	merge { |rpat, mergeFn|
+		^this.prMerge(rpat, mergeFn)
+	}
+
+	mergeRight { |rpat, mergeFn|
+		^this.prMerge(rpat, mergeFn, true)
+	}
+
+	prMerge { |rpat, mergeFn, invert=false|
+		var srcPat, dstPat;
+
 		rpat = rpat.mp;
 		mergeFn = mergeFn ? { |a, b| b };
+
+		srcPat = rpat; dstPat = this;
+		if (invert) { srcPat = this; dstPat = rpat };
+
 		^MareaPattern { |start, end|
 			var events = List[];
-			this.(start, end).do { |ev|
+			dstPat.(start, end).do { |ev|
 				var value;
-				var revents = rpat.(ev.activeArc.start, ev.activeArc.end);
-				revents = revents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
+				var srcEvents = srcPat.(ev.activeArc.start, ev.activeArc.end);
+				srcEvents = srcEvents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
 				value = ev.value;
-				revents.do { |rev|
-					value = if (value.isKindOf(Event) && rev.value.isKindOf(Event)) {
-						value.merge(rev.value, mergeFn)
+				srcEvents.do { |srcEv|
+					value = if (value.isKindOf(Event) && srcEv.value.isKindOf(Event)) {
+						value.merge(srcEv.value, mergeFn)
 					} {
-						mergeFn.(value, rev.value)
+						mergeFn.(value, srcEv.value)
 					}
 				};
 				events.add(MareaEvent(ev.positionArc, ev.activeArc, value))
 			};
 			events.asArray
 		}
-	}
-
-	mergeRight { |rpat, mergeFn|
-		Error("not implemented yet").throw
 	}
 
 	<< { |rpat| ^this.merge(rpat, { |a, b| b }) }
