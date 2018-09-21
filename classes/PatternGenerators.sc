@@ -63,7 +63,15 @@
 		^MP.rand.withEventValue { |v| (v * to).asInteger }
 	}
 
-	*sin {
+	*sine {
 		^MP.signal { |t| (sin(2*pi*t.asFloat) + 1) / 2 }
+	}
+
+	*cosine {
+		^this.sine.rotRight(0.25)
+	}
+
+	*saw {
+		^MP.signal { |t| t.asFloat % 1 }
 	}
 }
