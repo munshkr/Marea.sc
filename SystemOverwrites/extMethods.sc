@@ -13,7 +13,6 @@
 	%>> { |rpat| ^(this.mp %>> rpat) }
 	<<** { |rpat| ^(this.mp <<** rpat) }
 	**>> { |rpat| ^(this.mp **>> rpat) }
-
 }
 
 + Interval {
