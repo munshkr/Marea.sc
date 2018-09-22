@@ -61,10 +61,11 @@ MareaInterpreter {
 	}
 
 	eval_bjorklundMod { |node|
-		var x, y;
+		var x, y, z;
 		x = node.value.x.evalWith(this);
 		y = node.value.y.evalWith(this);
-		^[\bjorklund, [x, y]]
+		z = if (node.value.z.isNil) { 0 } { node.value.z.evalWith(this) };
+		^[\bjorklund, [x, y, z]]
 	}
 
 	eval_densityMod { |node|

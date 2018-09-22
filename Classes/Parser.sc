@@ -127,13 +127,17 @@ MareaParser {
 
 	parseBjorklundMod {
 		if (curToken[\type] == '(') {
-			var x, y;
+			var x, y, z;
 			this.match('(');
 			x = this.parseNumber;
 			this.match(',');
 			y = this.parseNumber;
+			if (curToken[\type] == ',') {
+				this.match(',');
+				z = this.parseNumber
+			};
 			this.match(')');
-			^MareaASTNode(\bjorklundMod, (x: x, y: y))
+			^MareaASTNode(\bjorklundMod, (x: x, y: y, z: z))
 		} {
 			if (['*', '/', '!', '?'].includes(curToken[\type])) {
 				^this.parseDensityMod

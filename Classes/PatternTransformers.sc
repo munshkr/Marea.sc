@@ -85,9 +85,11 @@
 		^0.mp.density(num) << this
 	}
 
-	bjorklund { |hits, total|
-		var bjorkPat = MP.fastcat(
-			Bjorklund.new(hits, total).collect { |v| if (v > 0) { v } { nil } }
+	bjorklund { |hits, total, offset|
+		var bjorkPat;
+		offset = offset ? 0;
+		bjorkPat = MP.fastcat(
+			Bjorklund.new(hits, total).collect { |v| if (v > 0) { v } { nil } }.rotate(offset)
 		);
 		^(bjorkPat << this)
 	}
