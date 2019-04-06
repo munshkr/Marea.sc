@@ -28,10 +28,10 @@ MareaPattern {
 	withResultTime { |fn|
 		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
-				var posArc = ev.positionArc, activeArc = ev.activeArc;
-				posArc = MareaArc(fn.(posArc.start), fn.(posArc.end));
-				activeArc = MareaArc(fn.(activeArc.start), fn.(activeArc.end));
-				MareaEvent(posArc, activeArc, ev.value)
+				var whole = ev.wholeArc, part = ev.partArc;
+				whole = MareaArc(fn.(whole.start), fn.(whole.end));
+				part = MareaArc(fn.(part.start), fn.(part.end));
+				MareaEvent(whole, part, ev.value)
 			}
 		}
 	}
@@ -39,7 +39,7 @@ MareaPattern {
 	withEventValue { |fn|
 		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
-				MareaEvent(ev.positionArc, ev.activeArc, fn.(ev.value))
+				MareaEvent(ev.wholeArc, ev.partArc, fn.(ev.value))
 			}
 		}
 	}
@@ -65,8 +65,8 @@ MareaPattern {
 		^MareaPattern { |start, end|
 			this.(start, end).collect { |ev|
 				var sam = start.floor;
-				var newArc = MareaArc(ev.activeArc.start.max(sam), ev.activeArc.end.min(sam + 1));
-				MareaEvent(ev.positionArc, newArc, ev.value)
+				var newArc = MareaArc(ev.partArc.start.max(sam), ev.partArc.end.min(sam + 1));
+				MareaEvent(ev.wholeArc, newArc, ev.value)
 			}
 		}.splitQueries
 	}
@@ -75,8 +75,8 @@ MareaPattern {
 		^this.(s, e).select { |event|
 			(event.onsetIn(s, e)) && (event.onset >= event.start)
 		}.collect { |event|
-			var s_ = event.positionArc.start;
-			var e_ = event.positionArc.end;
+			var s_ = event.wholeArc.start;
+			var e_ = event.wholeArc.end;
 			[(s_ - s) / (e - s), (e_ - s) / (e - s), event.value]
 		}
 	}
@@ -121,8 +121,8 @@ MareaPattern {
 			var events = List[];
 			dstPat.(start, end).do { |ev|
 				var value;
-				var srcEvents = srcPat.(ev.activeArc.start, ev.activeArc.end);
-				srcEvents = srcEvents.select { |ev| ev.activeArc.contains(ev.positionArc.start) };
+				var srcEvents = srcPat.(ev.partArc.start, ev.partArc.end);
+				srcEvents = srcEvents.select { |ev| ev.partArc.contains(ev.wholeArc.start) };
 				value = ev.value;
 				srcEvents.do { |srcEv|
 					value = if (value.isKindOf(Event) && srcEv.value.isKindOf(Event)) {
@@ -131,7 +131,7 @@ MareaPattern {
 						mergeFn.(value, srcEv.value)
 					}
 				};
-				events.add(MareaEvent(ev.positionArc, ev.activeArc, value))
+				events.add(MareaEvent(ev.wholeArc, ev.partArc, value))
 			};
 			events.asArray
 		}

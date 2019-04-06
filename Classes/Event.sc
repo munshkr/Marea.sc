@@ -1,32 +1,32 @@
 MareaEvent {
-	var <positionArc, <activeArc, <value;
+	var <wholeArc, <partArc, <value;
 
-	*new { |positionArc, activeArc, value|
-		^super.newCopyArgs(positionArc, activeArc, value);
+	*new { |wholeArc, partArc, value|
+		^super.newCopyArgs(wholeArc, partArc, value);
 	}
 
 	printOn { | stream |
-		stream << "E(" << positionArc << ", " << activeArc << ", " << value.asString << ")";
+		stream << "E(" << wholeArc << ", " << partArc << ", " << value.asString << ")";
 	}
 
 	onset {
-		^positionArc.start;
+		^wholeArc.start;
 	}
 
 	offset {
-		^positionArc.end;
+		^wholeArc.end;
 	}
 
 	start {
-		^activeArc.start;
+		^partArc.start;
 	}
 
 	hasOnset {
-		^(positionArc.start == activeArc.start);
+		^(wholeArc.start == partArc.start);
 	}
 
 	hasOffset {
-		^(positionArc.end == activeArc.end);
+		^(wholeArc.end == partArc.end);
 	}
 
 	onsetIn { |start, end|
@@ -34,10 +34,10 @@ MareaEvent {
 	}
 
 	== { |that|
-		^this.compareObject(that, #[\positionArc, \activeArc, \value])
+		^this.compareObject(that, #[\wholeArc, \partArc, \value])
 	}
 
 	hash {
-		^this.instVarHash(#[\positionArc, \activeArc, \value])
+		^this.instVarHash(#[\wholeArc, \partArc, \value])
 	}
 }
