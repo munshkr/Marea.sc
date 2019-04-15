@@ -1,8 +1,10 @@
 + MareaPattern {
 	*pure { |atom|
 		^MP { |start, end|
-			MareaArc(start, end).wholeCycles.collect { |arc|
-				MareaEvent(arc, arc, atom)
+			var queryArc = MareaArc(start, end);
+			queryArc.wholeCycles.collect { |arc|
+				var sect = queryArc.prSect(arc);
+				MareaEvent(sect, sect, atom)
 			}
 		}
 	}
