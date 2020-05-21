@@ -50,6 +50,10 @@ MareaArc {
 		^(start + end) / 2
 	}
 
+	sect { |otherArc|
+		^MareaArc(this.start.max(otherArc.start), this.end.min(otherArc.end))
+	}
+
 	== { |that|
 		^this.compareObject(that, #[\start, \end])
 	}

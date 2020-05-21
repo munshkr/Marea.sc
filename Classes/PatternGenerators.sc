@@ -3,7 +3,7 @@
 		^MP { |start, end|
 			var queryArc = MareaArc(start, end);
 			queryArc.wholeCycles.collect { |arc|
-				var sect = queryArc.prSect(arc);
+				var sect = queryArc.sect(arc);
 				MareaEvent(sect, sect, atom)
 			}
 		}
