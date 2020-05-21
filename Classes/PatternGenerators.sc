@@ -1,10 +1,16 @@
 + MareaPattern {
 	*pure { |atom|
 		^MP { |start, end|
-			var queryArc = MareaArc(start, end);
-			queryArc.wholeCycles.collect { |arc|
-				var sect = queryArc.sect(arc);
-				MareaEvent(sect, sect, atom)
+			var startPos, endPos;
+			start.isNumber.not.if { Error("start must be a number").throw };
+			end.isNumber.not.if { Error("end must be a number").throw };
+
+			startPos = start.asFloat.floor.asInt;
+			endPos = end.asFloat.ceil.asInt;
+
+			startPos.to(endPos - 1).collect { |t|
+				var arc = MareaArc(t, t+1);
+				MareaEvent(arc, arc, atom);
 			}
 		}
 	}
