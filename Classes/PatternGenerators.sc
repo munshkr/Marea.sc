@@ -5,8 +5,8 @@
 			start.isNumber.not.if { Error("start must be a number").throw };
 			end.isNumber.not.if { Error("end must be a number").throw };
 
-			startPos = start.asFloat.floor.asInt;
-			endPos = end.asFloat.ceil.asInt;
+			startPos = start.asFloat.floor.asInteger;
+			endPos = end.asFloat.ceil.asInteger;
 
 			startPos.to(endPos - 1).collect { |t|
 				var arc = MareaArc(t, t+1);
@@ -47,8 +47,8 @@
 	*rand {
 		^MP { |start, end|
 			var arc = MareaArc(start, end);
-			var startPos = start.asFloat.floor.asInt;
-			var endPos = end.asFloat.ceil.asInt;
+			var startPos = start.asFloat.floor.asInteger;
+			var endPos = end.asFloat.ceil.asInteger;
 
 			thisThread.randSeed = (arc.midPoint * 1000000).asInteger;
 

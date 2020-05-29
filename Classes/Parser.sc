@@ -237,7 +237,7 @@ MareaParser {
 
 	parseInteger {
 		var value;
-		value = curToken[\string].asInt;
+		value = curToken[\string].asInteger;
 		this.match(\integer);
 		^MareaASTNode(\integer, value)
 	}
